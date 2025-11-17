@@ -1,0 +1,378 @@
+--- Slide: FAARMM
+  FAARMMFacilitating Anti-Ableist Remote Music Making
+
+  Week 1 of the arduino course
+
+
+--- Slide: Welcome!
+  I’m Mable, your facilitator for this course. I use She/Her/Hers pronouns.
+
+  We’re trying to make an accessible space here, which means you are never required to have your microphone or video on in this meeting. I will be responding to chat messages, as well as participants using audio/video streaming as equally as I can.
+
+  
+
+  Welcome!
+
+  
+
+--- Slide: Anti-Ableist
+  Is a big claim! Know that in order to truly be anti ableist, I have to be open to the fact that I might still not make the space as safe as I want to, if I have a bias or a knowledge gap I don’t know about.
+
+  Ableism arguably shows up within music culture a lot in general, but especially within the digital instrument space.
+
+  Current options for digital musical instruments are closed, lack user friendliness, and rarely consider ability, cognitive or physical.
+
+  Anti-Ableist
+
+  
+
+--- Slide: Microcontroller vs Instrument
+  Participants may be interested in tinkering with electronics, or with making music disproportionately. That is not just alright, but celebrated.
+
+  The program is designed so that you’re ready to go without fuss if the technical stuff is not your favorite.
+
+  It’s also designed so that if there are advanced participants who wish to dive deeper, they will also be supported.
+
+  Microcontroller vs Instrument
+
+  
+
+--- Slide: What will the course cover?
+  We are making a digital instrument together.
+
+  You will receive everything needed for said instrument, working out of the box.
+
+  We will take a look at the larger picture of making music with digital instruments, and a front to back workflow, program stack, signal chain, or whatever you might want to call it.
+
+  What will the course cover?
+
+  
+
+--- Slide: What is a digital instrument?
+  A digital instrument can be many, many things. At the heart of it is an instrument that uses electricity for its function.
+
+  For our course, we break down the digital instrument into two main parts:
+
+  The control surface is the part of the instrument you actually use to play it, from a microphone to a keyboard to a camera, you can use many things for input.
+
+  The sound generator is the other part of the instrument. This takes the input, and then actually creates the sound the instrument is supposed to make when it receives that input.
+
+  What is a digital instrument?
+
+  
+
+--- Slide: What is OUR digital Instrument
+  Our instrument comes as a control surface, immediately ready for plug and play use as a musical “controller” or instrument.
+
+  Most use separated generators and controllers.
+
+  This allows you to create your own instrument with the hardware you already have: a phone or a computer, with minimal effort.
+
+  However each kit has hot swap-able plugs. And is ready to be played with at or added to at any time.
+
+  We accomplish this by using an Arduino Pro-Micro at the heart of our actual device, it’s the microcontroller, or tiny computer that actually makes the device do anything.
+
+  What is OUR digital Instrument
+
+  
+
+--- Slide: Free Software as in Freedom
+  We hear open source a lot, but what does it mean for something to be truly open?
+
+  There are four main pillars of open source that must all be upheld for something to be open:
+
+  The freedom to use.
+
+  The freedom to study.
+
+  The freedom to modify.
+
+  The freedom to share.
+
+  Free Software as in Freedom
+
+  
+
+--- Slide: This project will contribute to collective knowledge
+  In creating this program, we’re going to be noting any troubles that anyone might have as well as using the opportunity to create an instrument that is easy for as many people to make as we can manage.
+
+  As such, even failure is a success. It will be invaluable knowledge that will help us understand the things that are barriers.
+
+  Your contributions will be made anonymous unless explicitly agreed upon otherwise, out of respect for privacy.
+
+  This project will contribute to collective knowledge
+
+  
+
+--- Slide: What is a microcontroller?
+  A microcontroller is a single electronic chip that is on a circuit board with components that can store a simple program and some working data inside itself, to then constantly run that program and rad the signals on all it’s metal pins.
+
+  It’s pins are electrical connection points that the circuit board wires to power, sensors, and other things you might use to inform the program or control with the program, like temperature sensors, or a motor.
+
+  Microcontrollers show up in a massive number of things we use every day: Washing machines, microwaves, toys, “smart” gadgets. Any time a device follows a little set of rules like “if this button is pressed, make a sound come out of the speaker.” there’s usually a microcontroller quietly running a tiny program to do so.
+
+  What is a microcontroller?
+
+  
+
+--- Slide: How are we planning on doing this?
+  Week one (you are here): Intro, hello, getting everyone sorted and introduced, as well as ensuring they have access to resource like our discord.
+
+  Week two: Hopefully we start to get our instruments shipped in, and we start to talk about the second portion of the instrument, the sound generation.
+
+  Week three: Advanced design, final troubleshooting, and collaborative discussion and implementation. This is where where share what we are doing, the problems we have, and have fun with actually using our instruments.
+
+  Week four: Showcase, a celebration of everything we have accomplished with showings from those who chose to share. We will cover the launch of our repository.
+
+  How are we planning on doing this?
+
+  
+
+--- Slide: How does our kit work?
+  The Arduino Pro-Micro is used as a base. We load a custom software onto them that makes it work as a MIDI controller.
+
+  Then, we wire it to a bunch of mechanical computer keyboard switches, which are just the buttons in keyboards. This is where we get our control surface!
+
+  After that, we use a USB C cable to plug it into anything that uses MIDI.
+
+  How does our kit work?
+
+  
+
+--- Slide: What is MIDI?
+  MIDI is a simple digital language for electronic instruments to communicate with each other to tell them what to do. It sends tiny numbered messages over a cable or even wirelessly, that say “turn this note on”, “turn that note off”, “set this knob to where the user turned it”.
+
+  The MIDI standard has been around since the early 1980s, and really hasn’t changed at the core. It ended up being built into almost everything that deals with music or sound control: digital pianos, synths, drum machines, audio interfaces, lighting rigs, DJ controllers, phone apps, DAWs, even toys.
+
+  What is MIDI?
+
+  
+
+--- Slide: What is Arduino?
+  Arduino is a type of board built around a microcontroller that’s made to be accessible.
+
+  Accessibility in this instance means as easy as possible to purchase, power, program, and wire to the outside world.
+
+  The board handles power, USB, and more.
+
+  Arduino also comes with a software environment specifically designed to be friendly to artists, students, and beginners.
+
+  They have become THE “standard starter brain” for any and all digital physical projects: the programming tools are simple, the boards follow open hardware designs, and the code snippets/programs are stored as what they call “sketches”, and are tiny. The combination is why you see them everywhere.
+
+  What is Arduino?
+
+  
+
+--- Slide: For the tinkerers:
+  The firmware is not just “hackable”, it doesn’t need to be hacked. It is made to explore and play with, simple, powerful, and open source. It was written by me specifically for this project.
+
+  You may add, remove, destroy, rebuild, expand, or whatever else you can dream of with this instrument.
+
+  For the advanced: We've included a multiplexer, which allows you to expand the inputs to include even a full piano's worth of buttons, freeing up pins for other things, like analog potentiometers or faders, a display, or audio output to make it a standalone instrument.
+
+  For the tinkerers:
+
+  
+
+--- Slide: For the musicians or those who’d rather play
+  The kit comes assembled, ready to work with any MIDI device.
+
+  MIDI means no having to think about it, generally, despite the technical name.
+
+  The device needs no firmware to work, only a single USB connection for power and data. It doesn’t mind being used USB C to C, C to A, or generally any other horrible collection of dongles a new idea might need to work.
+
+  The mechanical key switches are high performance input devices, and boutique midi controllers like this cost hundreds of dollars oftentimes. Plus they’re simple and responsive.
+
+  You can even fairly easily change the firmware to have it recognized as an ortholinear gaming macro pad “claw” keyboard for PC gaming.
+
+  For the musicians or those who’d rather play
+
+  
+
+--- Slide: What you’ll get:
+  One ready device! Or:
+
+  An Arduino Pro-Micro, preloaded with firmware and correctly plugged in.
+
+  A 3D printed enclosure
+
+  16 Keychon Banana keyswitches wired to dupont cables for solderless exploration
+
+  A (VERY short) USB cable in case you don't have any.
+
+  A multiplexer for advanced users, which allows you to create grid of buttons in wiring to increase effective input capabilities, and it breaks this device open.
+
+  A breadboard for exploration
+
+  Extra Dupont wires for solderless exploring.
+
+  
+
+  What you’ll get:
+
+  
+
+--- Slide: What you won’t get:
+  A way to reuse your keyswitches, as we had to glue the joints for strain relief. Therefore:
+
+  Any buttons to build a second, custom instrument.
+
+  A second enclosure.
+
+  Any sensors, input devices, screens, RGBLEDs, motors, potentiometers, faders, displays, or whatever else your wildest dreams might need to be realized.
+
+  
+
+  What you won’t get:
+
+  
+
+--- Slide: The good news?
+  A second enclosure can be a Tupperware container or a cardboard box.
+
+  Buttons like keyboard switches and arcade buttons are relatively affordable and easy to come by, and there are even cheaper options for experimentation and planning!
+
+  
+
+  
+
+  That being said, it’s important to note these are still barriers.
+
+  The good news?
+
+  
+
+--- Slide: What are the requirements of this course?
+  You may have noticed, you will have a fairly “finished” device already, in some ways.
+
+  And despite what we will learn, it can be boiled down to what the instrument is, how it works, and how to load software to make it make sound as a control surface.
+
+  So you may be wondering what’s actually required of you, which is nothing.
+
+  However, if you’d like to get a lot out of this opportunity, you’re more than welcome to dive into this for the next little while.
+
+  Requirements of this course?
+
+  
+
+--- Slide: So what CAN we do?
+  This is much more than just “Pick a software to plug a midi controller that’s already built into and call it an instrument.” as a course.
+
+  First, you may follow the repository and guided documentation to completely unplug and rewire your Arduino, and understand how it all works.
+
+  Second, you may install a means of modifying the firmware of the microcontroller, like the Arduino IDE or PlatformIO in VSCodium, or even just using the terminal. This way you may inspect line for line how your instrument works. It’s simpler than you think! This is also all documented, not in a way that sounds like a textbook, but in real human language.
+
+  
+
+  
+
+  So what CAN we do?
+
+  
+
+--- Slide: What CAN we do? Continued:
+  Third, you may modify the code to alter the behavior of your instrument, or even expand it’s capabilities to be more accessible or powerful.
+
+  Fourth, you may remove the Arduino from the prebuilt instrument example, and plug it in to your breadboard. From there, you may begin truly designing your own instrument, or even just experimenting and learning even further before either putting back and getting good use out of the device however it is useful.
+
+  Fifth, you can contribute to the repo by just sharing your experience, but also more intentionally and technically by expanding the capabilities and allowing us to document it.
+
+  Sixth, you will potentially learn not to underestimate the vibrancy and importance of software, and may learn more than you think choosing sound sources.
+
+  What CAN we do? Continued:
+
+  
+
+--- Slide: Software
+  There are several options for creating music. Even for non-musical participants, I HIGHLY recommend going through this part of the course. Music production is a GREAT example workflow that hybridizes with systems most have access to in a special way.
+
+  In other words, there aren’t many other use cases or experiments where you can have part of the function happening on a computer or phone, like in music making.
+
+  There are several options, with the first being a DAW, or Digital Audio Workstation.
+
+  Software
+
+  
+
+--- Slide: What’s a DAW? (what’s up doc?)
+  A Digital Audio Workstation is the type of program we generally use to make music today. It’s a NON DESTRUCTIVE editing platform, which means we can make music using audio files and things we have on our computer, without touching, changing, cutting, or otherwise modifying the original files.
+
+  Generally, a DAW will have an audio engine at its core, where it connects to the device it’s running on to use any audio capabilities the machine might have. This includes microphones, speakers, and even devices you’ve got plugged in to make or receive sound.
+
+  Then after that, A DAW normally has a way to arrange, record, and modify audio, which can be accomplished many ways.
+
+  Some producers call DAWs “the box”, because it’s a little box with everything multi-million dollar studios used to have.
+
+  What’s a DAW?
+
+  
+
+--- Slide: What other options do we have?
+  If you are not creating music, you may be frustrated and confused by all of the features, bells, and whistles of a full DAW. I personally do not really like DAWs even as a fairly advanced user, but that is just me.
+
+  There are programs for sound generation in which the entire program is just a single instrument, which is usually called a standalone instrument. Surge XT,
+
+  There’s also a THIRD option, called a plugin. Plugins are programs that can be, well, plugged into to a larger program, and operate within them. We use plugins primarily in DAWs, but they can be used in other places as well. Almost every audio effect and generator is available as a plugin, normally as a VST or AU.
+
+  What other options do we have?
+
+  
+
+--- Slide: But what are the meetings actually going to be like?
+  Meetings will be largely like this, gatherings in which I will share a fairly high level overview of everything you need to know, explaining core concepts, and potentially leaving the finer questions unanswered.
+
+  I will never show you “Where the button is to push and make the thing work.”. That is not because I think it’s a way to teach a lesson and I’m better than you, it’s because every program on every platform has nearly infinite slight variations that make doing that near impossible. I will show you how to find correct documentation.
+
+  Instead, I will hopefully actually drum up more questions than I answer.
+
+  
+
+  But what are the meetings actually going to be like?
+
+  
+
+--- Slide: But then what do we do?
+  After meetings, the real fun starts. The real course happens at your own pace, on your own time, and in your own direction.
+
+  You will be added to a Discord server for communications, where we will collaboratively create a hive of information by just working through our own projects and being curious.
+
+  Work will take place in the time BETWEEN meetings, and meetings are not the time we are doing the work. They are when we are learning, inspiring, gathering, and sharing.
+
+  Support will be available throughout this way, and course material and even firmware and the eventual open source release may be changed for the better to accommodate you.
+
+  But then what do we do?
+
+  
+
+--- Slide: Showcase? That sounds scary.
+  Submission to showcase is OPTIONAL and not required.
+
+  The goal of this course is to help each participant learn as much as possible and get as much as they can out of it. The open source repository is a secondary goal.
+
+  Submissions will be discussed later, but they can be a wide variety of things.
+
+  What we’re really trying to do here is celebrate what everyone was able to accomplish and cross-pollinate all of our ideas so that we will all move into the future smarter and more inspired.
+
+  Showcase? That sounds scary.
+
+  
+
+--- Slide: Last steps:
+  Join the discord.
+
+  Post your name and pronouns in the #welcome channel
+
+  Research all of the resources so that you feel ready when your device shows.
+
+  Plan what you’d ideally like to get out of this course intentionally, even maybe writing it down somewhere. What would you like to accomplish while you have support?
+
+  Play with software! Open up some examples of sound generating audio tools, or even go about using the tools you already use thinking about what you might be able to do with a new MIDI controller and setting up your workflow for it!
+
+  Think about if you’d like to continue down this path AFTER the course. Make a plan for that. If not, make a plan to get things done DURING the course, and end up with a useful device, after learning a lot.
+
+  Last steps:
+
+  
+
+  
+
