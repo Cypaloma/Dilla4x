@@ -51,7 +51,7 @@ Check back later for contribution guidelines when we transition to full open-sou
 ## 🎵 Getting Started with Development
 1. Clone this repository
 2. Start with the [Home](wiki/Home.md) guide in our wiki
-3. Review [firmware source](firmware/Dilla4x.ino)
+3. Review [firmware source](firmware/Dilla4x-MIDI/Dilla4x-MIDI.ino)
 4. Connect with course participants for collaborative development
 
 *“Get ready for the up-and-coming, whatever it is.” - J Dilla*

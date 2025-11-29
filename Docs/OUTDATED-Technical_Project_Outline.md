@@ -108,7 +108,7 @@ NoteButton key1 {2, {36, CHANNEL_1}};  // Pin 2 → C1 ch1
 
 `loop()`: Library handles.
 
-[Dilla4x.ino](firmware/Dilla4x.ino) ready-to-flash:
+[Dilla4x-MIDI.ino](firmware/Dilla4x-MIDI/Dilla4x-MIDI.ino) ready-to-flash:
 - 16 keys: Bottom-left C1(36) → right/up higher to C3(51).
 - Octave shift: All top 8 (rows1-2) simultaneous → +1; bottom 8 → -1 (-2/+2 max, EEPROM).
 - LED feedback, serial debug.

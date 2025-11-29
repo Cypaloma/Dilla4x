@@ -18,10 +18,14 @@
 - Strong automation features  
 - LV2 plugin support  
 
-**BespokeSynth**  
-[https://www.bespokesynth.com/](https://www.bespokesynth.com/)  
-- Modular patching environment  
-- Visual rack-style interface  
-- Supports VST plugins  
+**BespokeSynth**
+[https://www.bespokesynth.com/](https://www.bespokesynth.com/)
+- Modular patching environment
+- Visual rack-style interface
+- Supports VST plugins
+
+**Code-Based Tools**
+- [Sonic Pi](https://sonic-pi.net/) - Live coding music environment
+- [Strudel](https://strudel.cc/) - Web-based TidalCycles pattern engine
 
 👉 Next: [Advanced Paths](Advanced-Guide.md)

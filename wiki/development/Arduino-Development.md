@@ -14,7 +14,7 @@
 1. Install Arduino IDE
 2. Select Board: Arduino Leonardo
 3. Install Control_Surface library
-4. Upload firmware from `firmware/Dilla4x.ino`
+4. Upload firmware from `firmware/Dilla4x-MIDI/Dilla4x-MIDI.ino`
 
 ## Step-by-Step Firmware Upload
 1. Download firmware from GitHub

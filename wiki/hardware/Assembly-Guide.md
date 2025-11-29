@@ -1,5 +1,9 @@
 # Dilla4x Assembly Guide
 
+> **Before starting:**
+> - Ensure you have the [latest 3D printed parts](3D-Printing-Guide.md)
+> - Verify all pieces are clean and undamaged
+
 ## Step 1: Assembling the 3D Printed Shell
 
 ### Check the Parts

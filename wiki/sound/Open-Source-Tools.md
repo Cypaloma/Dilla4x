@@ -22,6 +22,7 @@
 - [Carla](https://kx.studio/Applications:Carla) - Plugin host for instrument racks
 - [Stochas](https://stochas.org/) - Smart MIDI sequencer
 - [Sonic Pi](https://sonic-pi.net/) - Code-based music creation
+- [Strudel](https://strudel.cc/) - Web-based live-coding (TidalCycles port) with immediate feedback
 
 ## Platform Support
 | Tool           | Windows | macOS | Linux |
@@ -31,6 +32,7 @@
 | Surge XT       | ✓       | ✓     | ✓     |
 | Hydrogen       | ✓       | ✓     | ✓     |
 | Sonic Pi       | ✓       | ✓     | ✓     |
+| Strudel        | ✓       | ✓     | ✓     |
 
 ## Starter Packs
 ### Beginner Friendly
@@ -47,6 +49,7 @@
 1. [BespokeSynth](https://www.bespokesynth.com/) - Modular environment
 2. [Carla](https://kx.studio/Applications:Carla) - Plugin host
 3. [Stochas](https://stochas.org/) - Creative sequencer
+4. [Strudel](https://strudel.cc/) - Pattern-based live coding environment
 
 ## Quick Tips
 - Start small: Limit to 3-4 tracks at first

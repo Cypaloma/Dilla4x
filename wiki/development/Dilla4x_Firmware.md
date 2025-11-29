@@ -2,7 +2,7 @@
 
 ## Overview
 
-`firmware/Dilla4x.ino` is the ready, plug-and-play USB MIDI firmware for the Dilla4x controller.
+`firmware/Dilla4x-MIDI/Dilla4x-MIDI.ino` is the ready, plug-and-play USB MIDI firmware for the Dilla4x controller.
 
 - **MIDI Notes**: 16 keys, chromatic C1 (36) bottom-left → ascending right/up to ~C3 (51) top-right.
 - **Octave Shift**: Chord-trigger: All 8 top-half keys (rows 1-2) within 100ms → +1 octave; bottom-half → -1. Range -2/+2, EEPROM persistent, LED feedback.
@@ -38,13 +38,13 @@
 ## Features Breakdown
 
 ### Dynamic Notes
-Custom [`DynamicNoteButton`](firmware/Dilla4x.ino#L97) class:
+Custom [`DynamicNoteButton`](firmware/Dilla4x-MIDI/Dilla4x-MIDI.ino#L97) class:
 - `INPUT_PULLUP`, edge-triggered note on/off.
 - Octave offset applied realtime: `note = base + (octaveShift * 12)`.
 
 ### Octave Chord Mode
-`checkOctaveChord()` polls 100Hz:
-- Detects exactly 8/8 pressed in half-grid within [`OCTAVE_WINDOW_MS`](firmware/Dilla4x.ino#L78)=100ms.
+`ChordManager::update()` handles octave chord detection:
+- Detects exactly 8/8 pressed in half-grid within 100ms window (configurable via `CHORD_WINDOW_MS` in Config.h).
 - Resets on release/miss.
 - LED blink, serial log.
 
@@ -55,7 +55,7 @@ EEPROM addr0: `octaveShift + 2` (0-4 → -2/+2).
 
 1. **Arduino IDE**:
    - Install [`Control_Surface`](https://tttapa.github.io/Control-Surface/) via Library Manager.
-   - Open [`Dilla4x.ino`](firmware/Dilla4x.ino).
+   - Open [`Dilla4x-MIDI.ino`](firmware/Dilla4x-MIDI/Dilla4x-MIDI.ino) in Arduino IDE or VSCodium with PlatformIO.
    - Tools > Board > **Arduino Leonardo**.
    - Tools > Port > Select Pro Micro port.
    - Verify (✓) → Upload (→).

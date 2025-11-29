@@ -35,17 +35,23 @@
 - Plugin host for complex racks  
 - Supports multiple plugin formats  
 
-**Stochas**  
-[https://stochas.org/](https://stochas.org/)  
-- Probabilistic sequencer  
-- Polyrhythmic pattern generation  
+**Stochas**
+[https://stochas.org/](https://stochas.org/)
+- Probabilistic sequencer
+- Polyrhythmic pattern generation
+
+**Strudel**
+[https://strudel.cc/](https://strudel.cc/)
+- Web-based TidalCycles pattern engine
+- Live coding with immediate feedback
+- MIDI/OSC output support
 
 ## Example Configurations
-1. **Modular Workstation**:  
-   BespokeSynth + Carla + Surge XT  
-2. **Pro Recording Setup**:  
-   Ardour + Hydrogen + Dexed  
-3. **Algorithmic Composition**:  
-   Sonic Pi + Stochas + Helm  
+1. **Modular Workstation**:
+   BespokeSynth + Carla + Surge XT
+2. **Pro Recording Setup**:
+   Ardour + Hydrogen + Dexed
+3. **Algorithmic Composition**:
+   Sonic Pi/Strudel + Stochas + Helm
 
 👉 Next: [Open Source Toolkit](Open-Source-Tools.md)
