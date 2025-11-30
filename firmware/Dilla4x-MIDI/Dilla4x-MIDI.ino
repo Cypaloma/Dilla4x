@@ -83,17 +83,42 @@ void handleOctaveShift(const int8_t direction) {
 // power cycle or successful firmware upload. This is NOT a bug.
 
 static bool checkRecoveryMode() {
-  // Configure recovery pins with pullups
+  // Try Active-Low first (buttons pull to GND with internal pullup)
   for (uint8_t i = 0; i < RECOVERY_PINS_COUNT; i++) {
     pinMode(RECOVERY_PINS[i], INPUT_PULLUP);
   }
   
   // First read - check if ALL recovery pins are LOW
   for (uint8_t i = 0; i < RECOVERY_PINS_COUNT; i++) {
-    if (digitalRead(RECOVERY_PINS[i]) != LOW) return false;
+    if (digitalRead(RECOVERY_PINS[i]) != LOW) {
+      // Not all pins LOW, try Active-High detection
+      // NOTE: Active-High detection is commented out until hardware is confirmed.
+      // If your buttons connect to VCC (Active-High), uncomment the block below.
+      
+      /*
+      // Try Active-High (buttons pull to VCC, no internal pulldown on 32u4)
+      // This requires external pulldown resistors
+      for (uint8_t j = 0; j < RECOVERY_PINS_COUNT; j++) {
+        pinMode(RECOVERY_PINS[j], INPUT);  // High-Z input
+      }
+      delay(RECOVERY_DEBOUNCE_MS);
+      
+      bool allHigh = true;
+      for (uint8_t j = 0; j < RECOVERY_PINS_COUNT; j++) {
+        if (digitalRead(RECOVERY_PINS[j]) != HIGH) {
+          allHigh = false;
+          break;
+        }
+      }
+      
+      if (allHigh) return true;  // Active-High buttons pressed
+      */
+      
+      return false;  // Neither Active-Low nor Active-High detected
+    }
   }
   
-  // Debounce
+  // All pins are LOW - debounce
   delay(RECOVERY_DEBOUNCE_MS);
   
   // Second read - verify all pins still LOW
@@ -101,20 +126,33 @@ static bool checkRecoveryMode() {
     if (digitalRead(RECOVERY_PINS[i]) != LOW) return false;
   }
   
-  return true;
+  return true;  // Active-Low buttons confirmed
 }
 
 // Safe idle state for bootloader access during firmware flashing.
-// Blinks LED rapidly to indicate recovery mode is active.
+// Blinks TX LED rapidly and exposes CDC Serial (/dev/ttyACM*) for uploads.
 // NOTE: This is an infinite loop BY DESIGN. Watchdog is never enabled when this
 // function is called (see setup() below), so there is no watchdog reset issue.
 void enterRecoveryMode() {
-  pinMode(LED_PIN, OUTPUT);
+  // Initialize USB Serial (CDC) so device enumerates as /dev/ttyACM*
+  // This makes the device flashable via arduino-cli upload or auto_flash.sh
+  Serial.begin(9600);
+  
+  // Initialize LEDs using the same macros as LedController
+  TX_RX_LED_INIT;
+  RXLED1;  // Keep RX LED off permanently
+  
+  // Infinite loop with rapid TX LED blink for visual confirmation
   while (true) {
-    digitalWrite(LED_PIN, LED_ACTIVE_LOW ? LOW : HIGH);
+    TXLED0;  // TX LED on
     delay(100);
-    digitalWrite(LED_PIN, LED_ACTIVE_LOW ? HIGH : LOW);
+    TXLED1;  // TX LED off
     delay(100);
+    
+    // Keep CDC Serial alive by processing any incoming data
+    if (Serial.available()) {
+      Serial.read();
+    }
   }
 }
 

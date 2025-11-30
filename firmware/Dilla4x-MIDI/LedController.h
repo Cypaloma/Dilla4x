@@ -2,7 +2,12 @@
 #define DILLA4X_LEDCONTROLLER_H
 
 #include <Arduino.h>
-#include "Config.h"
+
+// LED Control using TX LED macros (Pro Micro / ATmega32U4)
+// TXLED0 = TX LED on (active low), TXLED1 = TX LED off
+// RX LED is kept off permanently to avoid LED_BUILTIN ambiguity
+inline void setLedOn()  { TXLED0; }
+inline void setLedOff() { TXLED1; }
 
 enum class LedPattern {
   OFF,

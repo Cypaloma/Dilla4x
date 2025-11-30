@@ -14,8 +14,8 @@ constexpr uint8_t FIRMWARE_VERSION_PATCH = 0;
 // HARDWARE CONSTANTS
 // ========================================
 constexpr uint8_t NUM_KEYS = 16;
-constexpr uint8_t LED_PIN = LED_BUILTIN;
-constexpr bool LED_ACTIVE_LOW = true;
+// Note: LED control now uses TXLED0/1 macros directly (see LedController.h)
+// No LED_PIN or LED_ACTIVE_LOW constants needed
 
 // ========================================
 // TIMING CONSTANTS (ms)
@@ -24,7 +24,7 @@ constexpr unsigned long LED_SLOW_MS = 128;
 constexpr unsigned long LED_FAST_MS = 64;
 
 // Feedback visibility duration - long enough for user confirmation in live performance
-constexpr unsigned long LED_FEEDBACK_TIMEOUT_MS = 512;
+constexpr unsigned long LED_FEEDBACK_TIMEOUT_MS = 300;
 
 // Debounce time for chord gestures - prevents accidental triggers during normal playing
 constexpr unsigned long OCTAVE_CHORD_HOLD_MS = 300;
@@ -54,13 +54,14 @@ constexpr uint8_t KEY_PINS[NUM_KEYS] = {
   A0, A1, A2, A3  // Row 3
 };
 
-// Recovery mode: Hold all 4 corner buttons at power-on to enter safe idle state
-// for firmware upload if USB/MIDI stack fails. LED blinks rapidly when active.
-constexpr uint8_t RECOVERY_PINS_COUNT = 4;
+// Recovery mode: Hold Key 0 and Key 15 at power-on to enter safe idle state
+// for firmware upload if USB/MIDI stack fails.
+// - Exposes CDC Serial (/dev/ttyACM*) making device flashable
+// - TX LED blinks rapidly for visual confirmation (RX LED stays off)
+// - Auto-detects Active-Low buttons (Active-High support available but commented)
+constexpr uint8_t RECOVERY_PINS_COUNT = 2;
 constexpr uint8_t RECOVERY_PINS[RECOVERY_PINS_COUNT] = {
   KEY_PINS[0],   // Top-Left
-  KEY_PINS[3],   // Top-Right
-  KEY_PINS[12],  // Bottom-Left
   KEY_PINS[15]   // Bottom-Right
 };
 
@@ -92,7 +93,7 @@ constexpr uint16_t CHORD_MASK_UP =
 constexpr uint8_t CHORD_THRESHOLD = 8;
 // Cancel threshold with margin: prevents accidental re-trigger during hand repositioning
 constexpr uint8_t CHORD_CANCEL_THRESHOLD = 3;
-constexpr uint8_t MIN_MEANINGFUL_KEYS = 6;
+constexpr uint8_t MIN_MEANINGFUL_KEYS = 1;
 
 // ========================================
 // VALIDATION & DERIVED CONSTANTS
