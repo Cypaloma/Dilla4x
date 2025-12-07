@@ -1,57 +1,77 @@
-# Dilla4x - Open Musical Instrument Platform
+# Dilla4x - Open Source MIDI Platform
 
-**An open musical instrument platform dedicated to J Dilla (James Dewitt Yancey)**
-*Currently in closed collaborative development phase for participant privacy*
+**A minimalist, accessible 4x4 ortholinear MIDI controller inspired by classic MPC layouts.**
 
-## 📖 Project Overview
-Dilla4x is a minimalist 4x4 ortholinear MIDI controller inspired by classic MPC layouts. This repository contains:
-- Hardware designs
-- Firmware source code
-- Comprehensive documentation/wiki (recently reorganized)
-- Course materials for collaborative learning
+> *"Get ready for the up-and-coming, whatever it is." - J Dilla*
 
-**Important Note:** This project is currently in an early development phase as part of a closed course where participants collaboratively develop instruments and contribute to the repository. The materials will be fully open-sourced after the course completion.
+---
 
-## 🧭 Navigation Guide
+## 🎵 What is Dilla4x?
 
-### 📚 Project Documentation
-Explore our comprehensive wiki for technical details:
-- [Home](wiki/Home.md) - Project overview and quick start guide
-- [Hardware Guides](wiki/hardware/) - Assembly instructions and components
-- [Firmware Development](wiki/development/) - Programming and customization
-- [Music Production](wiki/sound/) - Making music with your Dilla4x
+The **Dilla4x** is a fully open-source hardware and software project designed to be the most accessible and hackable MIDI grid controller available. Built around the Arduino Pro Micro, it serves as both a serious musical instrument and a learning platform for hardware development.
 
-### 🎓 Course Materials
-Access course resources for collaborative development:
-- [Week 1 Introduction](Course/Gatherings/Week%201/FAARMM%20Week%201-ODP.txt)
-- Additional weekly materials (to be added during course progression)
+### Key Features
 
-## 🛠️ Project Structure
+*   **16 Mechanical Keys**: Uses standard Cherry MX-compatible keyswitches for a premium feel.
+*   **Accessible Design**: Unique "chord trigger" octave shifting allows full creative control for users with limited hand mobility or fine dexterity.
+*   **Plug-and-Play**: Class-compliant USB MIDI. Works instantly with Ableton, Logic, FL Studio, web synths, and more. No drivers needed.
+*   **Hackable Core**:
+    *   **Standard MIDI Firmware**: Simple, robust, low-latency C++ firmware (v0.3).
+    *   **Future Scope**: Support for QMK and detailed guides for visual art integration strictly planned.
+*   **Open Hardware**: Simple PCB and 3D-printed enclosure designs that are easy to modify.
+
+---
+
+## 🚀 Quick Start
+
+Everything you need is in our comprehensive **[Wiki](wiki/Home.md)**.
+
+1.  **Build It**: [Step-by-Step Assembly Guide](wiki/hardware/Assembly-Guide.md)
+2.  **Flash It**: [Firmware Guide](wiki/development/Dilla4x_Firmware.md)
+3.  **Play It**: [How to Use Your Dilla4x](wiki/sound/How-to-Use-Dilla4x-MIDI.md)
+
+---
+
+## 🧠 Firmware & Development
+
+The project currently supports the **Standard MIDI Firmware (v0.3)**, a stateless, low-latency engine designed for performance.
+
+*   **View Source**: [`firmware/Dilla4x-MIDI/`](firmware/Dilla4x-MIDI/)
+*   **Modify**: [Arduino Development Guide](wiki/development/Arduino-Development.md) or [PlatformIO Guide](wiki/development/VSCodium-PlatformIO-MIDI-Guide.md)
+
+### Road Ahead
+We are actively working on:
+*   **QMK Port**: Bringing advanced keymapping (Layers, Tap Dance) to the Dilla4x.
+*   **Visual Arts**: Workflows for using Dilla4x with TouchDesigner, Resolume, and p5.js.
+*   **Ergonomics**: Low-profile enclosure designs.
+
+*See the full [ROADMAP.md](ROADMAP.md) for details.*
+
+---
+
+## 📂 Repository Structure
+
+```text
+├── firmware/          # Arduino firmware source (Standard MIDI v0.3)
+├── wiki/              # Complete documentation (Build, Code, Play)
+│   ├── development/   # Coding guides
+│   ├── hardware/      # BOM & Assembly
+│   └── sound/         # Music theory & usage guides
+├── ROADMAP.md         # Future development plans
+└── LICENSE            # Apache 2.0
 ```
-├── Course/            # Course materials and meeting notes
-├── Docs/              # Legacy documentation (being migrated to wiki)
-├── firmware/          # Arduino firmware source code
-├── wiki/              # Project documentation and guides
-│   ├── development/   # Firmware programming guides
-│   ├── hardware/      # Assembly and components
-│   ├── sound/         # Music production resources
-│   └── Home.md        # Main documentation hub
-├── LICENSE
-└── README.md          # You are here
-```
 
-## 🤝 Contribution Notice
-While this repository is not currently accepting external contributions during the closed course phase, all materials will be open-sourced under:
-- **Hardware**: Open source design
-- **Firmware**: Apache 2.0 License
-- **Documentation**: Apache 2.0 License
+---
 
-Check back later for contribution guidelines when we transition to full open-source development.
+## 🤝 Contributing
 
-## 🎵 Getting Started with Development
-1. Clone this repository
-2. Start with the [Home](wiki/Home.md) guide in our wiki
-3. Review [firmware source](firmware/Dilla4x-MIDI/Dilla4x-MIDI.ino)
-4. Connect with course participants for collaborative development
+This project is open source under the **Apache 2.0 License**.
+Contributions to hardware, firmware, and documentation are welcome!
 
-*“Get ready for the up-and-coming, whatever it is.” - J Dilla*
+1.  Fork the repository
+2.  Create your feature branch
+3.  Submit a Pull Request
+
+---
+
+*Dedicated to the legacy of James Dewitt Yancey.*
