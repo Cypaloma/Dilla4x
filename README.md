@@ -10,7 +10,7 @@
 
 ## 🎵 What is Dilla4x?
 
-The **Dilla4x** is a fully open-source hardware and software project designed to be the most accessible and hackable MIDI grid controller available. Built around the **Arduino Pro Micro**, it serves as both a serious musical instrument and a learning platform for hardware development.
+The **Dilla4x** is a fully open-source hardware and software project. Built around the **Arduino Pro Micro**, it serves as both a serious musical instrument and a learning platform for hardware development.
 
 ### ✨ Key Features
 
