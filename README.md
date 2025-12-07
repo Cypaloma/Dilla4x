@@ -47,9 +47,10 @@ The project currently runs on **Standard MIDI Firmware (v0.3)**, a stateless, lo
 
 ### 🔮 The Road Ahead
 
-We are actively expanding the Dilla4x ecosystem. Check [ROADMAP.md](ROADMAP.md) for full details.
+We are open to expanding the Dilla4x ecosystem. Check [ROADMAP.md](ROADMAP.md) for full details.
 
-- [ ] **QMK Port**: Bringing advanced keymapping (Layers, Tap Dance) to the Dilla4x.
+Example ideas:
+- [ ] **QMK Port**: Keyboard function to the Dilla4x.
 - [ ] **Visual Arts**: Workflows for TouchDesigner, Resolume, and p5.js.
 - [ ] **Ergonomics**: Low-profile enclosure designs.
 
