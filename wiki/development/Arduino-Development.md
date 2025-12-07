@@ -1,4 +1,9 @@
-# Arduino Development Setup
+# Arduino Development Setup (MIDI Firmware)
+
+Guide for setting up the development environment for the **Dilla4x Standard MIDI Firmware (v0.3)**.
+
+> [!NOTE]
+> This guide is specific to the `firmware/Dilla4x-MIDI` codebase. Other firmwares (e.g., QMK) will use different toolchains.
 
 ## Official Resources
 - [Arduino IDE Download](https://docs.arduino.cc/software/ide/)
@@ -13,7 +18,7 @@
 ## Basic Setup
 1. Install Arduino IDE
 2. Select Board: Arduino Leonardo
-3. Install Control_Surface library
+3. Install **MIDIUSB** library (not Control_Surface)
 4. Upload firmware from `firmware/Dilla4x-MIDI/Dilla4x-MIDI.ino`
 
 ## Step-by-Step Firmware Upload
@@ -25,4 +30,4 @@
 
 ## Next Steps
 - [Firmware Configuration](Dilla4x_Firmware.md)
-- [Advanced Development with VSCodium](VSCodium-PlatformIO-Guide.md)
+- [Advanced Development with VSCodium](VSCodium-PlatformIO-MIDI-Guide.md)

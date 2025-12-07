@@ -1,58 +1,25 @@
 #include "LedController.h"
-#include "Config.h"  // For LED_SLOW_MS, LED_FAST_MS timing constants
 
 void LedController::init() {
   TX_RX_LED_INIT;  // Initialize LED pins
-  setLedOff();     // TX LED off initially
-  RXLED1;          // Keep RX LED off permanently
+  TXLED1;          // TX LED off (Active Low, 1=Off, 0=On)
+  RXLED1;          // RX LED off (Active Low, 1=Off, 0=On)
 }
 
-unsigned long LedController::getInterval(LedPattern pattern) const {
-  switch (pattern) {
-    case LedPattern::BLINK_SLOW: return LED_SLOW_MS;
-    case LedPattern::BLINK_FAST: return LED_FAST_MS;
-    default: return 0;  // Non-blinking patterns don't use intervals
+// Activity on RXLED (Stable, User Control)
+void LedController::setActivity(bool active) {
+  if (active) {
+    RXLED0; // ON
+  } else {
+    RXLED1; // OFF
   }
 }
 
-void LedController::setPattern(LedPattern pattern, unsigned long currentMillis) {
-  if (currentPattern != pattern) {
-    currentPattern = pattern;
-    
-    // Start with LED OFF for blinking patterns (prevents flash)
-    if (pattern == LedPattern::BLINK_SLOW || pattern == LedPattern::BLINK_FAST) {
-      ledState = false;
-      setLedOff();
-      lastToggle = currentMillis;
-    } else {
-      // Apply immediate state for non-blinking patterns
-      ledState = (pattern != LedPattern::OFF);
-      if (ledState) {
-        setLedOn();
-      } else {
-        setLedOff();
-      }
-      lastToggle = 0;
-    }
-  }
-}
-
-void LedController::update(unsigned long currentMillis) {
-  // Only update for blinking patterns
-  if (currentPattern != LedPattern::BLINK_SLOW && currentPattern != LedPattern::BLINK_FAST) {
-    return;
-  }
-  
-  // Call getInterval() directly (caching was premature optimization)
-  const unsigned long interval = getInterval(currentPattern);
-  
-  if ((unsigned long)(currentMillis - lastToggle) >= interval) {
-    ledState = !ledState;
-    if (ledState) {
-      setLedOn();
-    } else {
-      setLedOff();
-    }
-    lastToggle = currentMillis;
+// Octave Status on TXLED (Shared with USB)
+void LedController::setShifted(bool shifted) {
+  if (shifted) {
+    TXLED0; // ON
+  } else {
+    TXLED1; // OFF
   }
 }

@@ -1,4 +1,9 @@
-# VSCodium + PlatformIO Guide
+# VSCodium + PlatformIO Guide (MIDI Firmware)
+
+Development guide for the **Dilla4x Standard MIDI Firmware**.
+
+> [!NOTE]
+> This workflow applies to the C++ based Arduino firmware. QMK development will differ.
 
 ## Installation
 1. **Install VSCodium**:

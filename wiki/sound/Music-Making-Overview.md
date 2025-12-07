@@ -1,4 +1,9 @@
-# Digital Music Making Options
+# Digital Music Making Overview
+
+> [!NOTE]
+> The Dilla4x with **Standard MIDI Firmware** works as a class-compliant MIDI controller. This guide assumes you are using that firmware.
+
+## Connecting to Your Computer
 (from "DAWs are terrifying" to "I want deep tools and open source everything")
 
 ## How to Choose

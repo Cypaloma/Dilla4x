@@ -3,33 +3,21 @@
 
 #include <Arduino.h>
 
-// LED Control using TX LED macros (Pro Micro / ATmega32U4)
-// TXLED0 = TX LED on (active low), TXLED1 = TX LED off
-// RX LED is kept off permanently to avoid LED_BUILTIN ambiguity
-inline void setLedOn()  { TXLED0; }
-inline void setLedOff() { TXLED1; }
-
-enum class LedPattern {
-  OFF,
-  ON,
-  BLINK_SLOW,
-  BLINK_FAST
-};
+// LED Control using system-provided TX/RX LED macros for ATmega32U4
+// TX LED = Activity (Green)
+// RX LED = Octave Shifted (Yellow)
 
 class LedController {
 public:
   void init();
-  void update(unsigned long currentMillis);
-  void setPattern(LedPattern pattern, unsigned long currentMillis);
   
-private:
-  LedPattern currentPattern = LedPattern::OFF;
-  unsigned long lastToggle = 0;
-  bool ledState = false;  // Logical LED state (may differ from physical pin state)
+  // Set TX LED (Green) based on key activity
+  // true = ON/Active, false = OFF
+  void setActivity(bool active);
   
-  unsigned long getInterval(LedPattern pattern) const;
-
+  // Set RX LED (Yellow) based on Octave state
+  // true = Shifted (Warning), false = Center (Safe)
+  void setShifted(bool shifted);
 };
 
 #endif // DILLA4X_LEDCONTROLLER_H
-

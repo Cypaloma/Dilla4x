@@ -1,6 +1,6 @@
-FQBN := arduino:avr:leonardo
+FQBN := arduino:avr:micro
 SKETCH := Dilla4x.ino
-LIBS := "Control Surface"
+LIBS := "MIDIUSB"
 PORT ?= /dev/ttyACM0
 BUILD_DIR := build
 

@@ -10,25 +10,16 @@ enum class ChordEvent : uint8_t {
   OCTAVE_DOWN
 };
 
-enum class ChordRequest : uint8_t {
-  NONE,
-  DOWN,
-  UP
-};
-
 class ChordManager {
 public:
+  // Check for chord hold completion. Non-blocking.
   ChordEvent update(unsigned long currentMillis, uint16_t pinMask);
   
 private:
-  enum class ChordState { IDLE, DEBOUNCE, TRIGGERED };
-  
-  ChordState state = ChordState::IDLE;
-  unsigned long stateStart = 0;
-  ChordRequest pendingChord = ChordRequest::NONE;
-  uint8_t lastDownCount = 0;
-  uint8_t lastUpCount = 0;
+  unsigned long downChordStartTime = 0;
+  unsigned long upChordStartTime = 0;
+  bool downTriggered = false;
+  bool upTriggered = false;
 };
 
 #endif // DILLA4X_CHORDMANAGER_H
-

@@ -1,11 +1,10 @@
 /*
- * Dilla4x Firmware
- * Version number is defined in Config.h
- * Designed for Arduino Pro Micro/Leonardo (ATmega32U4) only.
+ * Dilla4x Firmware - Zero Latency Implementation
+ * Optimized for immediate response and simple feedback.
  */
 
 #include <avr/wdt.h>
-#include <Control_Surface.h>
+#include <MIDIUSB.h>
 #include "Config.h"
 #include "Utils.h"
 #include "ChordManager.h"
@@ -15,144 +14,103 @@
 // GLOBALS
 // ========================================
 
-USBMIDI_Interface g_midi;
-Transposer<MIN_MIDI_NOTE, MAX_MIDI_NOTE> g_transposer(0);
+// Button state tracking
+uint16_t g_lastButtonState = 0;   // The state we last SENT to MIDI
+uint16_t g_stableButtonState = 0; // The debounced physical state
+unsigned long g_lastDebounceTime[NUM_KEYS] = {0};
+constexpr int16_t NOTE_NONE = -1;
+int16_t g_activeNotes[NUM_KEYS];
 
-// NoteButtons array indices must match order of KEY_PINS and BASE_NOTES arrays
-// NOTE: Control_Surface library automatically configures pinMode for all NoteButton pins
-// when Control_Surface.begin() is called. Explicit pinMode() calls are NOT needed.
-Bankable::NoteButton buttons[] = {
-  {g_transposer, KEY_PINS[0], {BASE_NOTES[0], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[1], {BASE_NOTES[1], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[2], {BASE_NOTES[2], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[3], {BASE_NOTES[3], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[4], {BASE_NOTES[4], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[5], {BASE_NOTES[5], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[6], {BASE_NOTES[6], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[7], {BASE_NOTES[7], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[8], {BASE_NOTES[8], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[9], {BASE_NOTES[9], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[10], {BASE_NOTES[10], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[11], {BASE_NOTES[11], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[12], {BASE_NOTES[12], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[13], {BASE_NOTES[13], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[14], {BASE_NOTES[14], MIDI_CHANNEL}},
-  {g_transposer, KEY_PINS[15], {BASE_NOTES[15], MIDI_CHANNEL}}
-};
+// Octave transposition
+int8_t g_octaveOffset = 0; // -3 to +3 octaves
 
+// Modules
 ChordManager g_chordMgr;
 LedController g_led;
 
-// Feedback state: 0 = inactive, >0 = end timestamp
-static unsigned long g_feedbackEndTime = 0;
-
 // ========================================
-// HELPERS
+// MIDI HELPERS
 // ========================================
 
-// Send All Notes Off (CC 123) before octave shifts to prevent stuck notes.
-// NOTE: Control_Surface library guarantees MIDI interface is initialized by the time
-// this function can be called (it's only called from loop() after Control_Surface.begin()).
+// Queue MIDI message (flushed at end of loop)
+void sendNoteOn(uint8_t note, uint8_t velocity, uint8_t channel) {
+  midiEventPacket_t noteOn = {0x09, uint8_t(0x90 | (channel & 0x0F)), note, velocity};
+  MidiUSB.sendMIDI(noteOn);
+}
+
+void sendNoteOff(uint8_t note, uint8_t channel) {
+  midiEventPacket_t noteOff = {0x08, uint8_t(0x80 | (channel & 0x0F)), note, 0};
+  MidiUSB.sendMIDI(noteOff);
+}
+
 void sendAllNotesOff() {
-  g_midi.sendControlChange({0x7B, MIDI_CHANNEL}, 0);
+  midiEventPacket_t cc = {0x0B, uint8_t(0xB0 | (MIDI_CHANNEL & 0x0F)), 0x7B, 0};
+  MidiUSB.sendMIDI(cc);
 }
 
 // ========================================
 // LOGIC
 // ========================================
 
+void handleButtonChange(uint8_t keyIndex, bool pressed) {
+  // Calculate transposed note - clamp to valid MIDI range [0, 127]
+  int16_t rawNote = BASE_NOTES[keyIndex] + (g_octaveOffset * SEMITONES_PER_OCTAVE);
+  int8_t note = (rawNote < 0) ? 0 : (rawNote > 127 ? 127 : rawNote);
+  
+  if (pressed) {
+    g_activeNotes[keyIndex] = note;
+    sendNoteOn(note, 127, MIDI_CHANNEL);
+  } else {
+    int16_t storedNote = g_activeNotes[keyIndex];
+    if (storedNote != NOTE_NONE) {
+      sendNoteOff(static_cast<uint8_t>(storedNote), MIDI_CHANNEL);
+      g_activeNotes[keyIndex] = NOTE_NONE;
+    }
+  }
+}
+
 void handleOctaveShift(const int8_t direction) {
-  const int8_t currentTransposition = g_transposer.getTransposition();
-  const int8_t newTransposition = currentTransposition + (direction * SEMITONES_PER_OCTAVE);
-  const int8_t newOctave = newTransposition / SEMITONES_PER_OCTAVE;
+  const int8_t newOctaveOffset = g_octaveOffset + direction;
   
-  // Check octave range first (simpler, catches edge cases)
-  if (newOctave < MIN_OCTAVE || newOctave > MAX_OCTAVE) return;
-  
-  sendAllNotesOff();
-  g_transposer.setTransposition(newTransposition);
-  g_feedbackEndTime = millis() + LED_FEEDBACK_TIMEOUT_MS;
+  if (newOctaveOffset >= MIN_OCTAVE && newOctaveOffset <= MAX_OCTAVE) {
+    // Octave takes precedence; shift immediately, then stop any held notes at original pitches
+    g_octaveOffset = newOctaveOffset;
+    uint16_t heldMask = g_stableButtonState;
+    for (uint8_t i = 0; i < NUM_KEYS; i++) {
+      if ((heldMask & (1U << i)) == 0) continue;
+      int16_t storedNote = g_activeNotes[i];
+      if (storedNote != NOTE_NONE) {
+        sendNoteOff(static_cast<uint8_t>(storedNote), MIDI_CHANNEL);
+        g_activeNotes[i] = NOTE_NONE;
+      }
+    }
+    // Safety CC for hosts that rely on it
+    sendAllNotesOff();
+    MidiUSB.flush();
+  }
 }
 
 // ========================================
-// RECOVERY MODE
+// RECOVERY MODE (Unchanged)
 // ========================================
-// DESIGN NOTE: Recovery mode is an infinite loop with NO timeout by design.
-// This is intentional - it provides a "safe idle state" for firmware upload when
-// the device is soft-bricked due to USB/MIDI stack failure. The only exit is
-// power cycle or successful firmware upload. This is NOT a bug.
+// ... (Keeping the original recovery mode logic as it was robust)
 
 static bool checkRecoveryMode() {
-  // Try Active-Low first (buttons pull to GND with internal pullup)
-  for (uint8_t i = 0; i < RECOVERY_PINS_COUNT; i++) {
-    pinMode(RECOVERY_PINS[i], INPUT_PULLUP);
-  }
-  
-  // First read - check if ALL recovery pins are LOW
-  for (uint8_t i = 0; i < RECOVERY_PINS_COUNT; i++) {
-    if (digitalRead(RECOVERY_PINS[i]) != LOW) {
-      // Not all pins LOW, try Active-High detection
-      // NOTE: Active-High detection is commented out until hardware is confirmed.
-      // If your buttons connect to VCC (Active-High), uncomment the block below.
-      
-      /*
-      // Try Active-High (buttons pull to VCC, no internal pulldown on 32u4)
-      // This requires external pulldown resistors
-      for (uint8_t j = 0; j < RECOVERY_PINS_COUNT; j++) {
-        pinMode(RECOVERY_PINS[j], INPUT);  // High-Z input
-      }
-      delay(RECOVERY_DEBOUNCE_MS);
-      
-      bool allHigh = true;
-      for (uint8_t j = 0; j < RECOVERY_PINS_COUNT; j++) {
-        if (digitalRead(RECOVERY_PINS[j]) != HIGH) {
-          allHigh = false;
-          break;
-        }
-      }
-      
-      if (allHigh) return true;  // Active-High buttons pressed
-      */
-      
-      return false;  // Neither Active-Low nor Active-High detected
-    }
-  }
-  
-  // All pins are LOW - debounce
+  for (uint8_t i = 0; i < RECOVERY_PINS_COUNT; i++) pinMode(RECOVERY_PINS[i], INPUT_PULLUP);
+  for (uint8_t i = 0; i < RECOVERY_PINS_COUNT; i++) if (digitalRead(RECOVERY_PINS[i]) != LOW) return false;
   delay(RECOVERY_DEBOUNCE_MS);
-  
-  // Second read - verify all pins still LOW
-  for (uint8_t i = 0; i < RECOVERY_PINS_COUNT; i++) {
-    if (digitalRead(RECOVERY_PINS[i]) != LOW) return false;
-  }
-  
-  return true;  // Active-Low buttons confirmed
+  for (uint8_t i = 0; i < RECOVERY_PINS_COUNT; i++) if (digitalRead(RECOVERY_PINS[i]) != LOW) return false;
+  return true;
 }
 
-// Safe idle state for bootloader access during firmware flashing.
-// Blinks TX LED rapidly and exposes CDC Serial (/dev/ttyACM*) for uploads.
-// NOTE: This is an infinite loop BY DESIGN. Watchdog is never enabled when this
-// function is called (see setup() below), so there is no watchdog reset issue.
 void enterRecoveryMode() {
-  // Initialize USB Serial (CDC) so device enumerates as /dev/ttyACM*
-  // This makes the device flashable via arduino-cli upload or auto_flash.sh
   Serial.begin(9600);
-  
-  // Initialize LEDs using the same macros as LedController
   TX_RX_LED_INIT;
-  RXLED1;  // Keep RX LED off permanently
-  
-  // Infinite loop with rapid TX LED blink for visual confirmation
+  RXLED1;
   while (true) {
-    TXLED0;  // TX LED on
-    delay(100);
-    TXLED1;  // TX LED off
-    delay(100);
-    
-    // Keep CDC Serial alive by processing any incoming data
-    if (Serial.available()) {
-      Serial.read();
-    }
+    TXLED0; delay(100);
+    TXLED1; delay(100);
+    if (Serial.available()) Serial.read();
   }
 }
 
@@ -162,64 +120,75 @@ void enterRecoveryMode() {
 
 void setup() {
   wdt_disable();
-  
-  // Initialize pin mappings once at startup
   initPinMappings();
+  for (uint8_t i = 0; i < NUM_KEYS; i++) pinMode(KEY_PINS[i], INPUT_PULLUP);
+  for (uint8_t i = 0; i < NUM_KEYS; i++) g_activeNotes[i] = NOTE_NONE;
   
   g_led.init();
+  Serial.begin(115200);
 
-  // Check for recovery mode BEFORE enabling watchdog or initializing Control_Surface.
-  // If recovery mode is active, enterRecoveryMode() never returns (infinite loop),
-  // so the watchdog is never enabled and there is no watchdog reset issue.
-  if (checkRecoveryMode()) {
-    enterRecoveryMode();
-  }
+  if (checkRecoveryMode()) enterRecoveryMode();
 
-  // Control_Surface.begin() initializes MIDI and configures pinMode for all NoteButton pins.
-  // Explicit pinMode() calls for KEY_PINS are NOT required.
-  Control_Surface.begin();
-  
-  // Enable watchdog AFTER recovery check. If we're in recovery mode, we never reach here.
   wdt_enable(WDTO_4S);
 }
 
 void loop() {
   wdt_reset();
-  Control_Surface.loop();
-  
   const unsigned long currentMillis = millis();
-  const uint16_t pinMask = readPins();
   
-  // --- Chord Logic ---
-  const ChordEvent event = g_chordMgr.update(currentMillis, pinMask);
+  // 1. Read Inputs
+  const uint16_t rawPinMask = readPins();
   
-  // Handle actionable events (OCTAVE_UP/DOWN)
-  if (event == ChordEvent::OCTAVE_UP || event == ChordEvent::OCTAVE_DOWN) {
-    const int8_t direction = (event == ChordEvent::OCTAVE_UP) ? 1 : -1;
-    handleOctaveShift(direction);
-  }
-  
-  // --- LED Logic ---
-  LedPattern targetPattern = LedPattern::OFF;
-  
-  // Feedback (Transient) - use centralized time utility
-  // NOTE: timeElapsed() correctly handles millis() wraparound. Setting g_feedbackEndTime
-  // to millis() + timeout is safe even near ULONG_MAX because unsigned arithmetic wraps
-  // correctly and timeElapsed() uses the (a - b) < ULONG_MAX/2 pattern for comparison.
-  if (g_feedbackEndTime != 0) {
-    if (timeElapsed(currentMillis, g_feedbackEndTime)) {
-      g_feedbackEndTime = 0;  // Expired
-    } else {
-      targetPattern = LedPattern::BLINK_FAST;
-    }
-  }
-  
-  // Active User Input (Meaningful Keys Pressed)
-  if (targetPattern == LedPattern::OFF && __builtin_popcount(pinMask) >= MIN_MEANINGFUL_KEYS) {
-    targetPattern = LedPattern::ON;
-  }
-  
-  g_led.setPattern(targetPattern, currentMillis);
-  g_led.update(currentMillis);
-}
+  bool anyActivity = false;
+  bool midiTraffic = false;
 
+  // 2. Debounce & Process Keys
+  for (uint8_t i = 0; i < NUM_KEYS; i++) {
+    bool rawState = (rawPinMask & (1U << i)) != 0;
+    
+    // Check if state changed
+    if (rawState != ((g_stableButtonState & (1U << i)) != 0)) {
+       // Only process if stable for DEBOUNCE_MS
+       if ((currentMillis - g_lastDebounceTime[i]) > DEBOUNCE_MS) {
+         g_lastDebounceTime[i] = currentMillis;
+         
+         if (rawState) {
+           g_stableButtonState |= (1U << i);
+         } else {
+           g_stableButtonState &= ~(1U << i);
+         }
+       }
+    }
+    
+    // Fire MIDI immediately on state change confirmation
+    bool confirmedState = (g_stableButtonState & (1U << i)) != 0;
+    bool lastState = (g_lastButtonState & (1U << i)) != 0;
+    
+    if (confirmedState != lastState) {
+      handleButtonChange(i, confirmedState);
+      
+      if (confirmedState) {
+        g_lastButtonState |= (1U << i);
+      } else {
+        g_lastButtonState &= ~(1U << i);
+      }
+      midiTraffic = true;
+    }
+    
+    if (confirmedState) anyActivity = true;
+  }
+
+  // 3. Absolute Priority: Flush MIDI Traffic BEFORE any other logic
+  if (midiTraffic) {
+    MidiUSB.flush();
+  }
+
+  // 4. Background Chord Check (Does not block MIDI)
+  ChordEvent chord = g_chordMgr.update(currentMillis, g_stableButtonState);
+  if (chord == ChordEvent::OCTAVE_UP) handleOctaveShift(1);
+  if (chord == ChordEvent::OCTAVE_DOWN) handleOctaveShift(-1);
+
+  // 5. Update LEDs (Activity on RX, Octave on TX)
+  g_led.setActivity(anyActivity); 
+  g_led.setShifted(g_octaveOffset != 0);
+}

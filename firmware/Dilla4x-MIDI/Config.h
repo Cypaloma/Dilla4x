@@ -1,7 +1,7 @@
 #ifndef DILLA4X_CONFIG_H
 #define DILLA4X_CONFIG_H
 #include <Arduino.h>
-#include <Control_Surface.h>
+// #include <Control_Surface.h> // Removed for zero-latency raw implementation
 
 // ========================================
 // VERSION
@@ -17,17 +17,13 @@ constexpr uint8_t NUM_KEYS = 16;
 // Note: LED control now uses TXLED0/1 macros directly (see LedController.h)
 // No LED_PIN or LED_ACTIVE_LOW constants needed
 
-// ========================================
-// TIMING CONSTANTS (ms)
-// ========================================
-constexpr unsigned long LED_SLOW_MS = 128;
-constexpr unsigned long LED_FAST_MS = 64;
+// Debounce time for keys (aggressive for low latency)
+constexpr unsigned long DEBOUNCE_MS = 30;
 
-// Feedback visibility duration - long enough for user confirmation in live performance
-constexpr unsigned long LED_FEEDBACK_TIMEOUT_MS = 300;
-
-// Debounce time for chord gestures - prevents accidental triggers during normal playing
+// Chord hold time - how long to hold for octave shift
 constexpr unsigned long OCTAVE_CHORD_HOLD_MS = 300;
+
+
 
 // Recovery mode debounce delay
 constexpr unsigned long RECOVERY_DEBOUNCE_MS = 50;
@@ -38,9 +34,9 @@ constexpr unsigned long RECOVERY_DEBOUNCE_MS = 50;
 constexpr int8_t MIN_OCTAVE = -3;
 constexpr int8_t MAX_OCTAVE = 3;
 constexpr uint8_t SEMITONES_PER_OCTAVE = 12;
-constexpr auto MIDI_CHANNEL = Channel_1;
+constexpr uint8_t MIDI_CHANNEL = 0; // MIDI channels are 0-indexed in MIDIUSB library
 
-// MIDI note range: required by Transposer<MIN, MAX> template parameter
+// MIDI note range (legacy constants from Control_Surface)
 constexpr uint8_t MIN_MIDI_NOTE = 0;
 constexpr uint8_t MAX_MIDI_NOTE = 127;
 
@@ -90,9 +86,9 @@ constexpr uint16_t CHORD_MASK_UP =
   (1U << 3) | (1U << 7) | (1U << 11) | (1U << 15);  // Column 3
 
 // Chord threshold: all 8 keys on one side must be pressed
-constexpr uint8_t CHORD_THRESHOLD = 8;
+constexpr uint8_t CHORD_THRESHOLD = 6;
 // Cancel threshold with margin: prevents accidental re-trigger during hand repositioning
-constexpr uint8_t CHORD_CANCEL_THRESHOLD = 3;
+constexpr uint8_t CHORD_CANCEL_THRESHOLD = 2;
 constexpr uint8_t MIN_MEANINGFUL_KEYS = 1;
 
 // ========================================
@@ -124,7 +120,7 @@ static_assert(sizeof(KEY_PINS) == NUM_KEYS, "KEY_PINS size mismatch");
 static_assert(CHORD_THRESHOLD > CHORD_CANCEL_THRESHOLD, "Chord threshold must exceed cancel threshold");
 static_assert(CHORD_THRESHOLD > 0 && CHORD_THRESHOLD <= 8, "Chord threshold must be 1-8");
 static_assert(CHORD_CANCEL_THRESHOLD > 0, "Chord cancel threshold must be positive");
-static_assert(LED_FEEDBACK_TIMEOUT_MS > 0, "LED feedback timeout must be positive");
+
 static_assert(__builtin_popcount(CHORD_MASK_DOWN) == 8, "CHORD_MASK_DOWN must have exactly 8 keys");
 static_assert(__builtin_popcount(CHORD_MASK_UP) == 8, "CHORD_MASK_UP must have exactly 8 keys");
 // Validate chord masks only reference valid bit positions (0-15 for 16 keys)

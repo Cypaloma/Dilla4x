@@ -27,4 +27,4 @@
 - Apply effects
 - No MIDI required
 
-👉 Next: [Gentler DAWs](../sound/Intermediate-Guide.md)
+👉 Next: [How to Use Your Dilla4x](How-to-Use-Dilla4x-MIDI.md) or [Gentler DAWs](../sound/Intermediate-Guide.md)

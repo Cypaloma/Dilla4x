@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "Config.h"
+#include <limits.h>
 
 // Initialize pin mappings (call once in setup() before first readPins() call)
 void initPinMappings();

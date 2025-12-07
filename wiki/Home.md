@@ -15,14 +15,14 @@ The Dilla4x is a minimalist 4x4 ortholinear MIDI controller inspired by classic 
 2. 🔧 [Assemble Hardware](hardware/Assembly-Guide.md)
 3. 💻 [Setup Software](development/Arduino-Development.md)
 4. 🎛️ [Upload Firmware](development/Dilla4x_Firmware.md)
-5. 🎵 [Start Making Music](#-making-music)
+5. 🎵 [Start Making Music](sound/How-to-Use-Dilla4x-MIDI.md)
 
 ## 📚 Documentation
 
 ### Development
 - [Arduino Setup](development/Arduino-Development.md)
-- [VSCodium + PlatformIO](development/VSCodium-PlatformIO-Guide.md)
-- [Firmware Customization](development/Dilla4x_Firmware.md)
+- [VSCodium + PlatformIO (MIDI Firmware)](development/VSCodium-PlatformIO-MIDI-Guide.md)
+- [Dilla4x MIDI Firmware Guide](development/Dilla4x_Firmware.md)
 
 ### Hardware
 - [Complete Parts List](hardware/Kit-Contents.md)
@@ -30,6 +30,7 @@ The Dilla4x is a minimalist 4x4 ortholinear MIDI controller inspired by classic 
 - [Troubleshooting](../Troubleshooting.md)
 
 ### Sound & Music
+- [How to Use Your Dilla4x (MIDI Firmware)](sound/How-to-Use-Dilla4x-MIDI.md)
 - [Music Making Overview](sound/Music-Making-Overview.md)
 - [Beginner's Guide](sound/Beginner-Guide.md)
 
@@ -51,7 +52,7 @@ The hardware build has three phases:
 ## 💻 Software Setup
 Choose your environment:
 - **Beginner**: [Arduino IDE](development/Arduino-Development.md)
-- **Advanced**: [VSCodium + PlatformIO](development/VSCodium-PlatformIO-Guide.md)
+- **Advanced**: [VSCodium + PlatformIO](development/VSCodium-PlatformIO-MIDI-Guide.md)
 
 ## 🎧 Creative Uses
 - Beat making and drum programming

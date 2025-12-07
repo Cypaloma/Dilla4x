@@ -44,6 +44,49 @@
    - Jumper wires for solderless connections
    - Secure crimp connections for reliable operation
 
+### Quality Assurance Testing (Critical for DIY Builds)
+
+Two types of shorts can occur during assembly, and each has its own diagnostic tool:
+
+---
+
+#### **BOTTOM SECTION TEST: Arduino Header Shorts** (Crosstalk Detector)
+
+> [!IMPORTANT]
+> **Run this test IMMEDIATELY after soldering headers** - before installing Arduino in bottom tray, before attaching any buttons.
+
+**What This Tests**: Solder bridges between Arduino Pro Micro header pins
+
+**Why It Matters**:
+- Solder whiskers/bridges under rubber spacers are invisible from top
+- Header shorts cause multiple keys to trigger together ("crosstalk")
+- Testing before assembly = easy fix; testing after = full disassembly required
+- **Real failure mode**: Under magnification, header joints may look clean, but traces can be shorted underneath the board on the OTHER side
+
+**Testing Procedure**:
+
+1. **Upload `crosstalk_detector.ino`**:
+   - Located in firmware utilities folder
+   - Upload to freshly-soldered Arduino (no buttons attached yet)
+   - Open Serial Monitor at 115200 baud
+
+2. **Read the Results**:
+   - **✅ PASS**: `Status: Clean (No Crosstalk Detected)` → Safe to install in tray
+   - **❌ FAIL**: `SHORT DETECTED: Pin X <---> Pin Y` → Rework needed
+
+3. **If Shorts Detected**:
+   - Check BOTH sides of the board (top solder joints AND traces underneath)
+   - Remove solder bridges with desoldering wick/braid
+   - Inspect under rubber spacers for hidden shorts
+   - Re-test until completely clean
+   - Flash main firmware only after passing
+
+**How it works**: Systematically drives each pin LOW and checks if neighboring pins follow (indicating physical connection). Detects solder blobs, whiskers, flux contamination, and PCB trace damage.
+
+> [!WARNING]
+> **Even if solder joints look perfect**, shorts can exist underneath. The rubber spacers on Arduino boards can hide damaged traces. Always run this test.
+
+
 ### Mount Arduino Pro Micro
 1. **Placement**:
    - Insert into designated space on bottom plate
@@ -126,7 +169,103 @@
    - Connect to computer - verify power LED illuminates
    - Check for unexpected warmth from components
    - Listen for any buzzing or crackling sounds
-   - Test each key in serial monitor/MIDI software
+   
+3. **Functional Testing**:
+   
+   **Quick Test**: Flash main firmware and test each key in your DAW or MIDI monitor software
+   
+   **Thorough QA** (Recommended for builders):
+   - The firmware utilities include a tool called **`connection_scout`** for systematic testing
+   - Upload it to your assembled device (see "Reflashing" below if main firmware is already loaded)
+   - Open serial monitor (115200 baud)
+   - Press each button - it will show which pin activated
+   - Verify all 16 keys respond and map to correct pins
+   - Check for "ghost triggers" (buttons activating without being pressed)
+   
+   **Expected result**: Each button press should show `ACTIVITY DETECTED ON PIN: X` with the correct pin number for that button position.
+   
+   If buttons don't respond or trigger wrong pins, check your Dupont connector wiring against the pin assignment table above.
 
-👉 Next: [Arduino Development Guide](Arduino-Development.md)
+---
+
+## Troubleshooting: Keyswitch Ground Shorts
+
+> [!WARNING]
+> **TOP SECTION SHORTS - Common production issue**
+
+**Problem**: Keyswitch positive pin shorted to ground, causing key to be "always pressed" or completely dead.
+
+**Causes**:
+- **Bare ground wire retaining heat**: Sinks through hot glue, contacts positive pin
+- **Solid core wire overheating**: Wire melts through switch housing, shorting internally
+- **Poor strain relief**: Hot glue not fully bonding, allowing wire movement and contact
+
+**Symptoms**:
+- Key appears "stuck" (always triggered)
+- Key completely unresponsive
+- Random triggering without physical press
+
+#### **TOP SECTION TEST: Keyswitch Ground Shorts** (Connection Scout)
+
+> [!IMPORTANT]
+> Run this AFTER full assembly if keys behave strangely
+
+**Testing Procedure**:
+
+1. **Upload `connection_scout.ino`**:
+   - May require manual reset (see "Reflashing" below)
+   - Open Serial Monitor at 115200 baud
+
+2. **Observe Behavior**:
+   - **✅ GOOD**: Pin only shows activity when button physically pressed
+   - **❌ BAD**: Pin shows continuous `[PIN X:0!]` without button press = shorted to ground
+
+3. **Fix Ground Shorts**:
+   - Disassemble housing
+   - Inspect suspect keyswitch solder joints
+   - Check for:
+     - Bare ground wire touching positive pin
+     - Wire sunk into switch housing
+     - Failed hot glue strain relief
+   - Re-solder with proper insulation and strain relief
+   - Allow ALL joints to fully cool before moving wires
+
+---
+
+## Reflashing Diagnostic Utilities (Manual Reset Procedure)
+
+> [!CAUTION]
+> **If main firmware is already running**, the device may "soft-brick" - USB taken over by MIDI, preventing normal uploads.
+
+**When you need this**: Uploading `crosstalk_detector` or `connection_scout` after main firmware is installed
+
+**Manual Reset Procedure**:
+
+1. **Open the Device**:
+   - Remove screws from housing
+   - Separate top and bottom sections
+   - Locate Arduino Pro Micro
+
+2. **Access Reset Pin**:
+   - Find RST pad/pin on Arduino (near USB port)
+   - Find GND pad/pin or any ground point
+
+3. **Trigger Bootloader**:
+   - Have upload ready in Arduino IDE (click Upload button)
+   - **Quickly touch RST to GND TWICE** (double-tap within 1 second)
+   - Arduino enters bootloader mode (8 second window)
+   - IDE should detect port and upload immediately
+
+4. **Alternative Method**:
+   - Touch RST to GND once to reset
+   - Within 8 seconds, click Upload in IDE
+   - Repeat if timeout occurs
+
+> [!TIP]
+> **Use a bent paperclip or spare wire** to bridge RST and GND. Practice the timing before having a sketch ready to upload.
+
+> [!NOTE]
+> **Future hardware improvement**: Roadmap includes adding a reset button access hole in bottom plate to eliminate disassembly requirement.
+
+👉 Next: [Arduino Development Guide](../development/Arduino-Development.md) or [How to Use Your Dilla4x](../sound/How-to-Use-Dilla4x-MIDI.md)
 ⚠️ **Important**: Complete software setup before first use!
