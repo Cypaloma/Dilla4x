@@ -12,7 +12,7 @@ Future improvements and planned development for the Dilla4x MIDI controller.
 **Effort**: Low (hardware only)
 
 **Problem**:
-Currently, accessing the reset button requires full disassembly. To enter bootloader mode or trigger recovery, users must:
+Currently, accessing the reset pin to short it and load another sketch to the Arduino requires full disassembly. To enter bootloader mode or trigger recovery, users must:
 1. Remove screws
 2. Separate top and bottom sections
 3. Jump reset pin to ground with screwdriver
@@ -80,27 +80,7 @@ Add a small hole in the bottom plate of the enclosure for a tac switch:
 **Tools Required**:
 - MIDI monitor library (e.g., `mido` in Python)
 - GPIO control (mock or real hardware)
-- Test fixture for repeatable button actuation
-
----
-
-### Hardware-in-the-Loop (HIL) Test Framework
-**Status**: 🔴 Not Started  
-**Priority**: Low  
-**Effort**: High
-
-**Goal**: Fully automated end-to-end testing with physical device
-
-**Components**:
-- Relay/solenoid array to actuate buttons
-- Raspberry Pi or similar controller
-- MIDI capture over USB
-- Automated test suite
-
-**Benefits**:
-- Production line QA automation
-- Regression testing on real hardware
-- Long-term reliability testing
+- Test fixture for repeatable button actuation|
 
 ---
 
@@ -141,26 +121,6 @@ Add a small hole in the bottom plate of the enclosure for a tac switch:
 
 **Goal**: Redesign the enclosure/PCB mounting to reduce overall height.
 - Lower profile switches?
-- Recessed USB port?
-- PCB redesign?
-
----
-
-### Continuous Integration / Deployment (CI/CD)
-**Status**: 🔴 Not Started  
-**Priority**: Low  
-**Effort**: Medium
-
-**Goal**: Automated build and test pipeline
-
-**Pipeline Stages**:
-1. **Compile**: All firmware variants (debug, diag, main)
-2. **Static Analysis**: Linting, size checks
-3. **Unit Tests**: Run automated tests
-4. **(Optional) HIL Tests**: If framework available
-5. **Artifact Generation**: Upload compiled hex files
-
-**Platform**: GitHub Actions or similar
 
 ---
 
@@ -174,7 +134,7 @@ Add a small hole in the bottom plate of the enclosure for a tac switch:
 - Velocity sensitivity (requires hardware change - FSR or pressure sensors)
 - Configurable MIDI channel (stored in EEPROM - conflicts with stateless design)
 - Alternate chord modes (different octave shift patterns)
-- LED feedback customization
+- LED feedback customization/optimization
 - USB MIDI + DIN MIDI dual output
 
 **Evaluation Criteria**:
@@ -182,17 +142,6 @@ Add a small hole in the bottom plate of the enclosure for a tac switch:
 - No significant complexity increase
 - User demand
 - Backward compatibility
-
----
-
-## Recently Completed
-
-### ✅ Utility Reorganization (Dec 2025)
-- Created `connection_scout` (merged button scanner)
-- Renamed `pin_walker` → `crosstalk_detector`
-- Created `testing/` infrastructure with `firmware_test`
-- Comprehensive documentation for all utilities
-- Decision tree for tool selection
 
 ---
 
@@ -208,7 +157,7 @@ Add a small hole in the bottom plate of the enclosure for a tac switch:
 1. Choose item from roadmap
 2. Create branch
 3. Implement with tests
-4. Update this roadmap (move to "Completed")
+4. Update this roadmap
 5. Submit pull request
 
 ---
