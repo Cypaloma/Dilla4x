@@ -2,7 +2,7 @@
     "name": "Dilla4x",
     "vendorId": "0xFEED",
     "productId": "0x4444",
-    "firmwareVersion": "0.1.1",
+    "firmwareVersion": 1,
     "matrix": {
         "rows": 4,
         "cols": 4
