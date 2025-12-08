@@ -16,18 +16,19 @@
 #include QMK_KEYBOARD_H
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-    /* Layer 0: MIDI Notes (matches Dilla4x-MIDI firmware)
-     * Chromatic scale C2 (36) to D#3 (51)
+    /* Layer 0: Default Grid (Web-Dilla4x Compatible)
+     * Row 0 (Top):    1   2   3   4
+     * Row 1:          Q   W   E   R
+     * Row 2:          A   S   D   F
+     * Row 3 (Bottom): Z   X   C   V
      * 
-     * Row 0 (top):    C3  C#3 D3  D#3  (MIDI 48-51)
-     * Row 1:          G#2 A2  A#2 B2   (MIDI 44-47)
-     * Row 2:          E2  F2  F#2 G2   (MIDI 40-43)
-     * Row 3 (bottom): C2  C#2 D2  D#2  (MIDI 36-39)
+     * This layout maps perfectly to the Web-Dilla4x sampler defaults
+     * and works as a standard macropad out of the box.
      */
     [0] = LAYOUT_ortho_4x4(
-        MI_C3,  MI_Cs3, MI_D3,  MI_Ds3,  // C3-D#3 (MIDI 48-51)
-        MI_Gs2, MI_A2,  MI_As2, MI_B2,   // G#2-B2 (MIDI 44-47)
-        MI_E2,  MI_F2,  MI_Fs2, MI_G2,   // E2-G2  (MIDI 40-43)
-        MI_C2,  MI_Cs2, MI_D2,  MI_Ds2   // C2-D#2 (MIDI 36-39)
+        KC_1, KC_2, KC_3, KC_4,
+        KC_Q, KC_W, KC_E, KC_R,
+        KC_A, KC_S, KC_D, KC_F,
+        KC_Z, KC_X, KC_C, KC_V
     )
 };

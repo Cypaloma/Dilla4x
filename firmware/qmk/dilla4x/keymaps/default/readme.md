@@ -1,26 +1,25 @@
-# Default Keymap (VIA Enabled)
+# Default Keymap (Web-Dilla Compatible)
 
-Standard MIDI note layout for Dilla4x with VIA support enabled by default.
+Standard alphanumeric layout optimized for the **Web-Dilla4x** sampler.
 
 ## Features
-- **MIDI Notes**: Matches Dilla4x-MIDI firmware layout (C2-D#3)
-- **VIA Support**: Remap keys instantly using [VIA](https://usevia.app)
-- **Layer Support**: Dynamic layers available via VIA
+- **Plug & Play**: Works instantly with `tools/web-dilla4x/index.html` default mapping.
+- **Macropad Ready**: Sends standard keystrokes (1-4, Q-R, A-F, Z-V).
+- **VIA Support**: Remap keys instantly using [VIA](https://usevia.app).
+- **Layer Support**: Dynamic layers available via VIA.
 
 ## Layout
 
-Chromatic scale from C2 (MIDI 36) to D#3 (MIDI 51):
-
-```
-┌─────┬─────┬─────┬─────┐
-│ C3  │ C#3 │ D3  │ D#3 │  MIDI 48-51
-├─────┼─────┼─────┼─────┤
-│ G#2 │ A2  │ A#2 │ B2  │  MIDI 44-47
+| | Col 1 | Col 2 | Col 3 | Col 4 |
+|---|---|---|---|---|
+| **Row 0** | 1 | 2 | 3 | 4 |
+| **Row 1** | Q | W | E | R |
+| **Row 2** | A | S | D | F |
+| **Row 3** | Z | X | C | V | MIDI 44-47
 ├─────┼─────┼─────┼─────┤
 │ E2  │ F2  │ F#2 │ G2  │  MIDI 40-43
 ├─────┼─────┼─────┼─────┤
 │ C2  │ C#2 │ D2  │ D#2 │  MIDI 36-39
 └─────┴─────┴─────┴─────┘
-```
 
 This layout is NOT configurable at runtime. For customization, use the VIA keymap.
