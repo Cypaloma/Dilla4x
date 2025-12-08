@@ -99,10 +99,13 @@ You'll need:
    ```bash
    # Compile VIA keymap
    qmk compile -kb dilla4x -km via
-   
-   # Enter bootloader on device, then:
-   qmk flash -kb dilla4x -km via
    ```
+  4. **Flash**:
+   - Run the command: `qmk flash -kb dilla4x -km via`
+   - **IMPORTANT**: When prompted `Please reset your keyboard into bootloader mode now!`, you must **manually double-tap the reset button**.
+   - *Note: The `auto_flash.bat` recovery script DOES NOT work for QMK flashing.*
+
+5. **Done**: The device will restart as a QMK keyboard.
 
 ### Verification
 

@@ -33,7 +33,12 @@ Everything you need to get started is in our comprehensive **[Wiki](wiki/Home.md
 2.  **⚡ Flash Firmware**
     *   **Download from [GitHub Releases](https://github.com/Cypaloma/Dilla4x/releases/tag/v0.3.1)**:
         *   **MIDI Firmware** (v0.3.0): `dilla4x-midi-v0.3.0.hex`
-        *   **QMK Firmware** (v0.1.0): `dilla4x-qmk-v0.1.0.hex` (Unified)
+        *   **Flashing QMK Firmware:**
+            1.  **Manual Reset Required**: You must double-tap the physical reset button to enter bootloader mode. The auto-flash recovery script will **NOT** work for QMK.
+            2.  Flash using QMK Toolbox or CLI:
+                ```bash
+                qmk flash dilla4x-qmk-v0.1.0.hex
+                ```
 3.  **🎧 Use It**
     *   **MIDI Mode**: Learn the layout in **[How to Use Dilla4x-MIDI](wiki/software/How-to-Use-Dilla4x-MIDI.md)**
     *   **QMK Mode**: Remap keys with VIA - see **[QMK README](firmware/qmk/dilla4x/readme.md)**
