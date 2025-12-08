@@ -25,9 +25,9 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
      * Row 3 (bottom): C2  C#2 D2  D#2  (MIDI 36-39)
      */
     [0] = LAYOUT_ortho_4x4(
-        MI_C_3,  MI_Cs_3, MI_D_3,  MI_Ds_3,  // C3-D#3 (MIDI 48-51)
-        MI_Gs_2, MI_A_2,  MI_As_2, MI_B_2,   // G#2-B2 (MIDI 44-47)
-        MI_E_2,  MI_F_2,  MI_Fs_2, MI_G_2,   // E2-G2  (MIDI 40-43)
-        MI_C_2,  MI_Cs_2, MI_D_2,  MI_Ds_2   // C2-D#2 (MIDI 36-39)
+        MI_C3,  MI_Cs3, MI_D3,  MI_Ds3,  // C3-D#3 (MIDI 48-51)
+        MI_Gs2, MI_A2,  MI_As2, MI_B2,   // G#2-B2 (MIDI 44-47)
+        MI_E2,  MI_F2,  MI_Fs2, MI_G2,   // E2-G2  (MIDI 40-43)
+        MI_C2,  MI_Cs2, MI_D2,  MI_Ds2   // C2-D#2 (MIDI 36-39)
     )
 };

@@ -21,22 +21,18 @@ Visit the [Releases Page](https://github.com/Cypaloma/Dilla4x/releases) to downl
 
 ### QMK Firmware
 
-Due to the customizable nature of QMK and strict compilation environment requirements, we recommend building the QMK firmware from source to ensure it matches your specific layout needs.
+| Variant | Filename | Description |
+|---------|----------|-------------|
+| **Default** | `dilla4x-qmk-default-v0.1.0.hex` | Standard QMK features. No VIA. |
+| **VIA** | `dilla4x-qmk-via-v0.1.0.hex` | **RECOMMENDED**. Enables VIA configuration. |
 
-**How to Build:**
-1. Install QMK: [QMK Setup Guide](https://docs.qmk.fm/#/newbs_getting_started)
-2. Setup your QMK environment (`qmk setup`).
-3. Link the Dilla4x directory to QMK:
+**Flashing QMK Firmware:**
+1. Put device in bootloader mode (reset button twice).
+2. Flash using QMK Toolbox or CLI:
    ```bash
-   ln -s /path/to/Dilla4x/firmware/qmk/dilla4x ~/qmk_firmware/keyboards/dilla4x
+   qmk flash -kb dilla4x -km via
+   # OR with avrdude manually if needed (see above)
    ```
-4. Compile:
-   ```bash
-   qmk compile -kb dilla4x -km default
-   # or for VIA support:
-   qmk compile -kb dilla4x -km via
-   ```
-5. Flash the resulting `.hex` file.
 
 ## 🔧 How to Flash
 
