@@ -19,26 +19,24 @@ Visit the [Releases Page](https://github.com/Cypaloma/Dilla4x/releases) to downl
 
 **Best for**: Music production, DAWs, live performance
 
-### Dilla4x-QMK (v0.1.0)
+### QMK Firmware
 
-#### Default Keymap
-**File**: `dilla4x-qmk-default-v0.1.0.hex`
+Due to the customizable nature of QMK and strict compilation environment requirements, we recommend building the QMK firmware from source to ensure it matches your specific layout needs.
 
-- MIDI notes (same as MIDI firmware)
-- No VIA support
-- Smaller firmware size
-
-#### VIA Keymap (Recommended)
-**File**: `dilla4x-qmk-via-v0.1.0.hex`
-
-- Fully programmable via VIA configurator
-- MIDI mode support
-- N-Key Rollover (gaming)
-- Mouse keys and media control
-- Real-time remapping without reflashing
-- [Usage Guide](../wiki/software/How-to-Use-Dilla4x-QMK.md)
-
-**Best for**: Gaming, productivity, macros, accessibility
+**How to Build:**
+1. Install QMK: [QMK Setup Guide](https://docs.qmk.fm/#/newbs_getting_started)
+2. Setup your QMK environment (`qmk setup`).
+3. Link the Dilla4x directory to QMK:
+   ```bash
+   ln -s /path/to/Dilla4x/firmware/qmk/dilla4x ~/qmk_firmware/keyboards/dilla4x
+   ```
+4. Compile:
+   ```bash
+   qmk compile -kb dilla4x -km default
+   # or for VIA support:
+   qmk compile -kb dilla4x -km via
+   ```
+5. Flash the resulting `.hex` file.
 
 ## 🔧 How to Flash
 
