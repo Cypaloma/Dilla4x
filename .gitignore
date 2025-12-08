@@ -1,0 +1,47 @@
+# Build artifacts
+build/
+build_*/
+*.hex
+*.elf
+*.bin
+*.o
+*.a
+*.map
+
+# IDE/Editor files
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db
+
+# Platform-specific
+__pycache__/
+*.pyc
+*.pyo
+.pio/
+.platformio/
+
+# Python virtual environments
+venv/
+env/
+ENV/
+
+# Node modules (for any web tools)
+node_modules/
+package-lock.json
+
+# QMK build artifacts
+.build/
+*.d
+compile_commands.json
+
+# Temporary files
+*.tmp
+*.bak
+*.log
+
+# OS generated files
+.directory
+desktop.ini
