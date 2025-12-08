@@ -27,11 +27,41 @@ Provides a **safe idle state** when main firmware crashes or prevents USB upload
 ## Tools Included
 
 - **`recovery.ino`**: Minimal blink sketch (TX LED only)
-- **`auto_flash.sh`**: Automated upload script with bootloader handling
+- **`auto_flash.sh`**: Linux automated upload script
+- **`auto_flash.bat`**: Windows automated upload script
+- **`auto_flash_mac.command`**: macOS automated upload script (double-clickable in Finder)
 
 ## Usage
 
+### Linux
+```bash
+cd firmware/Dilla4x-MIDI/utils/recovery/
+./auto_flash.sh
+```
+
+### Windows
+1. Open Command Prompt or PowerShell
+2. Navigate to `firmware\Dilla4x-MIDI\utils\recovery\`
+3. Run `auto_flash.bat`
+```cmd
+cd firmware\Dilla4x-MIDI\utils\recovery
+auto_flash.bat
+```
+
+### macOS
+**Option A (Finder)**: Double-click `auto_flash_mac.command`  
+**Option B (Terminal)**:
+```bash
+cd firmware/Dilla4x-MIDI/utils/recovery/
+./auto_flash_mac.command
+```
+
+> [!NOTE]
+> All scripts require `arduino-cli` to be installed and in your PATH.
+> Install from https://arduino.github.io/arduino-cli/
+
 ### Method 1: Manual Upload
+
 ```bash
 cd firmware/Dilla4x-MIDI/utils/recovery/
 

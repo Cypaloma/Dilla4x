@@ -15,7 +15,8 @@ The Dilla4x is a minimalist 4x4 ortholinear MIDI controller inspired by classic 
 2. 🔧 [Assemble Hardware](hardware/Assembly-Guide.md)
 3. 💻 [Setup Software](development/Arduino-Development.md)
 4. 🎛️ [Upload Firmware](development/Dilla4x_Firmware.md)
-5. 🎵 [Start Making Music](sound/How-to-Use-Dilla4x-MIDI.md)
+5. 🎵 [Start Making Music](software/How-to-Use-Dilla4x-MIDI.md)
+
 
 ## 📚 Documentation
 
@@ -29,9 +30,14 @@ The Dilla4x is a minimalist 4x4 ortholinear MIDI controller inspired by classic 
 - [Step-by-Step Assembly](hardware/Assembly-Guide.md)
 - [Troubleshooting](../Troubleshooting.md)
 
+### 🧠 Software & Manuals
+- **[How to Use Dilla4x-MIDI](software/How-to-Use-Dilla4x-MIDI.md)** - Complete usage guide for the MIDI firmware (v0.3.0)
+- **[How to Use Dilla4x-QMK](software/How-to-Use-Dilla4x-QMK.md)** - Complete usage guide for the QMK firmware (v0.1.0)
+- **[Web Dilla4x Manual](software/Web-Dilla4x-Manual.md)** - Browser-based sampler/synth companion app
+
 ### Sound & Music
-- [How to Use Your Dilla4x (MIDI Firmware)](sound/How-to-Use-Dilla4x-MIDI.md)
 - [Music Making Overview](sound/Music-Making-Overview.md)
+
 - [Beginner's Guide](sound/Beginner-Guide.md)
 
 ## 🛠️ Technical Specifications

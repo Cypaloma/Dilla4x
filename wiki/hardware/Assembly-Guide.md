@@ -267,5 +267,5 @@ Two types of shorts can occur during assembly, and each has its own diagnostic t
 > [!NOTE]
 > **Future hardware improvement**: Roadmap includes adding a reset button access hole in bottom plate to eliminate disassembly requirement.
 
-👉 Next: [Arduino Development Guide](../development/Arduino-Development.md) or [How to Use Your Dilla4x](../sound/How-to-Use-Dilla4x-MIDI.md)
+👉 Next: [Arduino Development Guide](../development/Arduino-Development.md) or [How to Use Your Dilla4x](../software/How-to-Use-Dilla4x-MIDI.md)
 ⚠️ **Important**: Complete software setup before first use!

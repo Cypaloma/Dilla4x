@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dilla4x Board</title>
+    <script src="vendor/jszip.min.js"></script>
+    <style>
+        :root {
+            /* Base Theme */
+            --bg-body: #0a0a0a;
+            --bg-surface: #141414;
+            --bg-sidebar: #1a1a1a;
+            --bg-pad: #252525;
+            --bg-pad-hover: #333;
+            --text-primary: #e0e0e0;
+            --text-secondary: #888;
+            --border: #333;
+            --accent: #00ff9d;
+            --accent-rgb: 0, 255, 157;
+
+            --pad-size: min(18vw, 110px);
+            --gap: 12px;
+            --sidebar-width: 320px;
+        }
+
+        [data-theme="light"] {
+            --bg-body: #f0f2f5;
+            --bg-surface: #ffffff;
+            --bg-sidebar: #f7f8fa;
+            --bg-pad: #e4e6eb;
+            --bg-pad-hover: #d8dadf;
+            --text-primary: #1c1e21;
+            --text-secondary: #65676b;
+            --border: #ddd;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-body);
+            color: var(--text-primary);
+            font-family: 'Inter', system-ui, sans-serif;
+            margin: 0;
+            height: 100vh;
+            overflow: hidden;
+            display: flex;
+        }
+
+        /* --- LAYOUT --- */
+
+        /* Main Content Area */
+        .main-container {
+            flex: 1;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: margin-right 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            z-index: 10;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .header {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            font-weight: 300;
+            letter-spacing: 4px;
+            margin: 0 0 10px 0;
+            font-size: 1.5rem;
+        }
+
+        .toolbar {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            background: var(--bg-surface);
+            padding: 10px 20px;
+            border-radius: 12px;
+            border: 1px solid var(--border);
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            max-width: 95%;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: var(--bg-sidebar);
+            border-left: 1px solid var(--border);
+            height: 100%;
+            position: fixed;
+            right: 0;
+            top: 0;
+            transform: translateX(100%);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: -5px 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .sidebar.visible {
+            transform: translateX(0);
+        }
+
+        @media (min-width: 768px) {
+            body.sidebar-open .main-container {
+                margin-right: var(--sidebar-width);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                border-left: none;
+            }
+        }
+
+        /* --- CONTROLS --- */
+
+        .btn,
+        select,
+        .theme-btn {
+            background: var(--bg-pad);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 8px 16px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            transition: all 0.2s;
+            text-decoration: none;
+            font-family: inherit;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn:hover,
+        select:hover,
+        .theme-btn:hover {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+
+        .btn-icon {
+            padding: 8px;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+        }
+
+        /* Main Volume Control */
+        .vol-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: var(--bg-pad);
+            padding: 4px 12px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .vol-control label {
+            font-size: 0.7rem;
+            font-weight: bold;
+            color: var(--text-secondary);
+        }
+
+        .vol-control input {
+            width: 80px;
+            accent-color: var(--accent);
+        }
+
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .close-btn {
+            font-size: 1.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0 10px;
+        }
+
+        .close-btn:hover {
+            color: var(--accent);
+        }
+
+        .color-picker-wrapper {
+            display: flex;
+            align-items: center;
+            background: var(--bg-pad);
+            padding: 4px;
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        input[type="color"] {
+            border: none;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            background: none;
+        }
+
+        /* --- VISUALIZER AREA --- */
+        .vis-container {
+            width: 100%;
+            max-width: 600px;
+            height: 80px;
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        canvas#visualizer {
+            flex: 1;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            border: 1px solid var(--border);
+        }
+
+        .vu-meter {
+            width: 20px;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+
+        .vu-bar {
+            width: 100%;
+            background: var(--accent);
+            opacity: 0.8;
+            transition: height 0.05s linear;
+        }
+
+        /* --- PARAM GRIDS --- */
+        .param-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .full-width {
+            grid-column: span 2;
+        }
+
+        .section-title {
+            font-size: 0.7rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            margin-bottom: 10px;
+            font-weight: bold;
+            width: 100%;
+            letter-spacing: 1px;
+        }
+
+        .param {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .param label {
+            font-size: 0.65rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Knob/Slider */
+        .ui-sliders input[type="range"].param-slider {
+            -webkit-appearance: slider-vertical;
+            width: 6px;
+            height: 80px;
+            accent-color: var(--accent);
+            background: var(--bg-pad);
+        }
+
+        .ui-knobs input[type="range"].param-slider {
+            display: none;
+        }
+
+        .knob-container {
+            width: 48px;
+            height: 48px;
+            position: relative;
+            cursor: ns-resize;
+        }
+
+        .ui-sliders .knob-container {
+            display: none;
+        }
+
+        .knob-ring {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            position: relative;
+            pointer-events: none;
+        }
+
+        .knob-inner {
+            position: absolute;
+            top: 10%;
+            left: 10%;
+            width: 80%;
+            height: 80%;
+            background: var(--bg-sidebar);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .knob-value {
+            font-size: 0.65rem;
+            color: var(--accent);
+            font-weight: bold;
+        }
+
+        /* --- GRID --- */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--gap);
+            padding: 24px;
+            background: var(--bg-surface);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
+            position: relative;
+        }
+
+        .pad {
+            width: var(--pad-size);
+            height: var(--pad-size);
+            background: var(--bg-pad);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid transparent;
+            transition: transform 0.05s, background 0.05s;
+        }
+
+        .pad:active,
+        .pad.active {
+            background: var(--accent);
+            transform: scale(0.96);
+            box-shadow: 0 0 20px rgba(var(--accent-rgb), 0.5);
+        }
+
+        /* When active, text stays readable (black) */
+        .pad.active * {
+            color: #000 !important;
+        }
+
+        .pad-label {
+            font-size: 0.7rem;
+            font-weight: bold;
+            margin-bottom: 4px;
+            color: var(--text-secondary);
+            pointer-events: none;
+            /* Let clicks pass to pad */
+        }
+
+        .sample-name {
+            font-size: 0.65rem;
+            color: var(--text-primary);
+            max-width: 90%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            z-index: 5;
+            padding: 2px 4px;
+            border-radius: 4px;
+            pointer-events: auto;
+            /* Allow clicking text */
+        }
+
+        .sample-name:focus {
+            background: var(--bg-body);
+            color: var(--text-primary) !important;
+            outline: 1px solid var(--accent);
+            white-space: normal;
+            overflow: visible;
+        }
+
+        .status-bar {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        /* Floating Trigger */
+        #sidebar-toggle-btn {
+            display: none;
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--bg-surface);
+            border: 2px solid var(--accent);
+            color: var(--accent);
+            padding: 12px 18px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+            z-index: 40;
+            animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        @keyframes popIn {
+            from {
+                transform: scale(0);
+            }
+
+            to {
+                transform: scale(1);
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="main-container">
+        <div class="header">
+            <h1>WEB-DILLA4X</h1>
+            <div class="status-bar" id="status">Waiting for MIDI...</div>
+        </div>
+
+        <div class="toolbar">
+            <a href="DillaDefault.dilla" class="btn" download>Starter</a>
+            <button class="btn" onclick="document.getElementById('file-input').click()">Load Pack</button>
+            <button class="btn" onclick="exportPack()">Save Pack</button>
+
+            <div class="vertical-sep" style="width:1px; height:20px; background:var(--border);"></div>
+
+            <div class="vol-control">
+                <label>VOL</label>
+                <input type="range" min="0" max="100" value="80" oninput="setMainVolume(this.value)">
+            </div>
+
+            <div class="vertical-sep" style="width:1px; height:20px; background:var(--border);"></div>
+
+            <select id="mode-select" onchange="setMode(this.value)">
+                <option value="sampler">Mode: Sampler</option>
+                <option value="synth">Mode: Synth</option>
+            </select>
+
+            <select id="fw-select" onchange="STATE.mapping=this.value">
+                <option value="qmk">Map: QMK</option>
+                <option value="dilla">Map: DillaFW</option>
+            </select>
+
+            <div class="color-picker-wrapper"><input type="color" id="accent-picker" value="#00ff9d"
+                    oninput="setAccent(this.value)"></div>
+            <button class="theme-btn btn-icon" onclick="toggleTheme()" id="theme-icon">☀</button>
+        </div>
+
+        <input type="file" id="file-input" style="display:none" accept=".zip,.dilla,.pack"
+            onchange="loadPackFromFile(this.files[0])">
+
+        <div class="grid" id="grid"></div>
+
+        <!-- NEW VISUALIZER LOCATION -->
+        <div class="vis-container">
+            <canvas id="visualizer"></canvas>
+            <div class="vu-meter">
+                <div class="vu-bar" id="vu-bar" style="height: 0%;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Floating Toggle -->
+    <button id="sidebar-toggle-btn" onclick="openSidebar()">⚡ Settings</button>
+
+    <!-- Sidebar -->
+    <div class="sidebar ui-knobs" id="sidebar">
+        <div class="sidebar-header">
+            <span id="sidebar-title" style="font-weight:bold; color:var(--accent);">SETTINGS</span>
+            <button class="close-btn" onclick="closeSidebar()">✕</button>
+        </div>
+
+        <!-- SAMPLER CONTROLS -->
+        <div id="sampler-controls" style="display:none;">
+            <div class="section-title">Pad <span id="sel-pad-num">-</span></div>
+            <div class="param-grid">
+                <div class="param">
+                    <label>Pitch</label>
+                    <div class="knob-container" onmousedown="startDrag(event, 'smp-pitch')">
+                        <div class="knob-ring" id="ring-smp-pitch"></div>
+                        <div class="knob-inner"><span class="knob-value" id="val-smp-pitch">1.0</span></div>
+                    </div>
+                    <input type="range" class="param-slider" id="smp-pitch" min="0.1" max="2.0" step="0.01"
+                        oninput="updatePadParam('pitch', this.value)">
+                </div>
+            </div>
+
+            <div class="section-title">Envelope</div>
+            <div class="param-grid">
+                <div class="param">
+                    <label>Attack</label>
+                    <div class="knob-container" onmousedown="startDrag(event, 'smp-att')">
+                        <div class="knob-ring" id="ring-smp-att"></div>
+                        <div class="knob-inner"><span class="knob-value" id="val-smp-att">0.0s</span></div>
+                    </div>
+                    <input type="range" class="param-slider" id="smp-att" min="0" max="0.5" step="0.01"
+                        oninput="updatePadParam('attack', this.value)">
+                </div>
+                <div class="param">
+                    <label>Decay</label>
+                    <div class="knob-container" onmousedown="startDrag(event, 'smp-dec')">
+                        <div class="knob-ring" id="ring-smp-dec"></div>
+                        <div class="knob-inner"><span class="knob-value" id="val-smp-dec">Full</span></div>
+                    </div>
+                    <input type="range" class="param-slider" id="smp-dec" min="0.0" max="1.0" step="0.01"
+                        oninput="updatePadParam('decay', this.value)">
+                </div>
+            </div>
+        </div>
+
+        <!-- SYNTH CONTROLS -->
+        <div id="synth-controls" style="display:none;">
+            <div class="section-title">Oscillator</div>
+            <div class="param-grid">
+                <div class="param full-width">
+                    <label>Waveform</label>
+                    <select id="syn-wave" onchange="updateSynthParam('wave', this.value)" style="width:100%">
+                        <option value="triangle">Triangle</option>
+                        <option value="sine">Sine</option>
+                        <option value="square">Square</option>
+                        <option value="sawtooth">Saw</option>
+                    </select>
+                </div>
+                <div class="param">
+                    <label>Vibrato</label>
+                    <div class="knob-container" onmousedown="startDrag(event, 'syn-vib')">
+                        <div class="knob-ring" id="ring-syn-vib"></div>
+                        <div class="knob-inner"><span class="knob-value" id="val-syn-vib">0</span></div>
+                    </div>
+                    <input type="range" class="param-slider" id="syn-vib" min="0" max="100" step="1"
+                        oninput="updateSynthParam('vibrato', this.value)">
+                </div>
+                <div class="param">
+                    <label>Volume</label>
+                    <div class="knob-container" onmousedown="startDrag(event, 'syn-vol')">
+                        <div class="knob-ring" id="ring-syn-vol"></div>
+                        <div class="knob-inner"><span class="knob-value" id="val-syn-vol">80</span></div>
+                    </div>
+                    <input type="range" class="param-slider" id="syn-vol" min="0" max="100" step="1"
+                        oninput="updateSynthParam('volume', this.value)">
+                </div>
+            </div>
+
+            <div class="section-title">Envelope</div>
+            <div class="param-grid">
+                <div class="param">
+                    <label>Attack</label>
+                    <div class="knob-container" onmousedown="startDrag(event, 'syn-att')">
+                        <div class="knob-ring" id="ring-syn-att"></div>
+                        <div class="knob-inner"><span class="knob-value" id="val-syn-att">0.01</span></div>
+                    </div>
+                    <input type="range" class="param-slider" id="syn-att" min="0.01" max="2.0" step="0.01"
+                        oninput="updateSynthParam('attack', this.value)">
+                </div>
+                <div class="param">
+                    <label>Release</label>
+                    <div class="knob-container" onmousedown="startDrag(event, 'syn-rel')">
+                        <div class="knob-ring" id="ring-syn-rel"></div>
+                        <div class="knob-inner"><span class="knob-value" id="val-syn-rel">0.3</span></div>
+                    </div>
+                    <input type="range" class="param-slider" id="syn-rel" min="0.1" max="3.0" step="0.1"
+                        oninput="updateSynthParam('release', this.value)">
+                </div>
+            </div>
+
+            <div class="section-title">Filter</div>
+            <div class="param-grid">
+                <div class="param">
+                    <label>Cutoff</label>
+                    <div class="knob-container" onmousedown="startDrag(event, 'syn-cut')">
+                        <div class="knob-ring" id="ring-syn-cut"></div>
+                        <div class="knob-inner"><span class="knob-value" id="val-syn-cut">2k</span></div>
+                    </div>
+                    <input type="range" class="param-slider" id="syn-cut" min="100" max="10000" step="100"
+                        oninput="updateSynthParam('cutoff', this.value)">
+                </div>
+                <div class="param">
+                    <label>Res (Q)</label>
+                    <div class="knob-container" onmousedown="startDrag(event, 'syn-res')">
+                        <div class="knob-ring" id="ring-syn-res"></div>
+                        <div class="knob-inner"><span class="knob-value" id="val-syn-res">1.0</span></div>
+                    </div>
+                    <input type="range" class="param-slider" id="syn-res" min="0" max="20" step="0.1"
+                        oninput="updateSynthParam('resonance', this.value)">
+                </div>
+            </div>
+
+            <div class="section-title">Map</div>
+            <div class="param-grid">
+                <div class="param full-width">
+                    <select id="syn-dir" onchange="updateSynthParam('layout', this.value); updateLabels();">
+                        <option value="mpc">MPC (Up)</option>
+                        <option value="reading">Book (Down)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-title" style="margin-top:20px;">UI</div>
+        <div class="param-grid">
+            <div class="param full-width">
+                <button class="btn" onclick="toggleKnobs()" style="width:100%"><span
+                        id="ui-mode-text">Knobs</span></button>
+            </div>
+        </div>
+
+    </div>
+
+
+    <script>
+        const STATE = {
+            mode: 'sampler', mapping: 'dilla', theme: 'dark', accent: '#00ff9d',
+            uiMode: 'knobs',
+            audioCtx: new (window.AudioContext || window.webkitAudioContext)(),
+            mainGain: null,
+            analyser: null,
+            // Pads: 16 objects handling their own state
+            pads: Array.from({ length: 16 }, (_, i) => ({
+                id: i,
+                name: 'Empty',
+                buffer: null,
+                blob: null,
+                pitch: 1.0,
+                attack: 0.0,
+                decay: 1.0 // This acts as "hold" or "sustain" factor basically
+            })),
+            synth: { wave: 'triangle', attack: 0.01, release: 0.3, cutoff: 2000, resonance: 1.0, vibrato: 0, volume: 80, layout: 'mpc' },
+            voices: {}, // active voices
+            selectedPad: 0, // Last triggered or clicked pad for editing
+        };
+
+        const DOM = {
+            grid: document.getElementById('grid'), sidebar: document.getElementById('sidebar'),
+            status: document.getElementById('status'), themeIcon: document.getElementById('theme-icon'),
+            toggleBtn: document.getElementById('sidebar-toggle-btn')
+        };
+        const MPC_MAP = [12, 13, 14, 15, 8, 9, 10, 11, 4, 5, 6, 7, 0, 1, 2, 3];
+
+        function init() {
+            createGrid(); setupMIDI(); setupKeyboard(); setupGlobalDrag(); loadSettings();
+            setupAudio();
+            updateKnobVisuals();
+            requestAnimationFrame(drawLoop);
+            setMode('sampler');
+        }
+
+        function setupAudio() {
+            STATE.mainGain = STATE.audioCtx.createGain();
+            STATE.mainGain.gain.value = 0.8;
+            STATE.analyser = STATE.audioCtx.createAnalyser();
+            STATE.analyser.fftSize = 2048;
+            STATE.mainGain.connect(STATE.analyser);
+            STATE.analyser.connect(STATE.audioCtx.destination);
+        }
+
+        function setMainVolume(v) {
+            if (STATE.mainGain) STATE.mainGain.gain.value = v / 100;
+        }
+
+        // --- UI ---
+        function setMode(m) {
+            STATE.mode = m;
+            document.body.className = `mode-${m}`;
+            updateSidebar();
+            updateLabels();
+
+            // Auto open sidebar if logic dictates (optional, keeping manual for now unless user asks)
+            // But we ensure the Floating Button is updated
+            const btn = document.getElementById('sidebar-toggle-btn');
+            btn.innerHTML = m === 'synth' ? '🎛 Synth' : '⚡ Pad Settings';
+
+            // If we are in synth mode, open it up
+            if (m === 'synth') openSidebar();
+        }
+
+        function openSidebar() {
+            DOM.sidebar.classList.add('visible');
+            document.body.classList.add('sidebar-open');
+            DOM.toggleBtn.style.display = 'none';
+        }
+
+        function closeSidebar() {
+            DOM.sidebar.classList.remove('visible');
+            document.body.classList.remove('sidebar-open');
+            DOM.toggleBtn.style.display = 'block';
+        }
+
+        function updateSidebar() {
+            const smp = document.getElementById('sampler-controls');
+            const syn = document.getElementById('synth-controls');
+            const title = document.getElementById('sidebar-title');
+
+            if (STATE.mode === 'synth') {
+                smp.style.display = 'none';
+                syn.style.display = 'block';
+                title.textContent = "SYNTH ENGINE";
+            } else {
+                syn.style.display = 'none';
+                smp.style.display = 'block';
+                title.textContent = "SAMPLER PAD " + (STATE.selectedPad + 1);
+                updateSamplerKnobs(); // Refresh knobs to selected pad values
+            }
+        }
+
+        function toggleKnobs() {
+            STATE.uiMode = STATE.uiMode === 'knobs' ? 'sliders' : 'knobs';
+            DOM.sidebar.classList.toggle('ui-knobs', STATE.uiMode === 'knobs');
+            DOM.sidebar.classList.toggle('ui-sliders', STATE.uiMode === 'sliders');
+            document.getElementById('ui-mode-text').textContent = STATE.uiMode === 'knobs' ? 'Knobs' : 'Faders';
+            saveSettings();
+        }
+
+        // --- SAMPLER LOGIC ---
+        function triggerPad(i) {
+            STATE.selectedPad = i; // Select for editing
+            updateSidebar(); // Refresh sidebar visuals if open
+            updatePadVisuals(i, true);
+
+            if (STATE.audioCtx.state === 'suspended') STATE.audioCtx.resume();
+
+            if (STATE.mode === 'sampler') {
+                const p = STATE.pads[i];
+                if (p.buffer) {
+                    // Stop previous if re-triggering (monophonic per pad style)
+                    if (STATE.voices[i]) {
+                        try { STATE.voices[i].stop(); } catch (e) { }
+                    }
+
+                    const s = STATE.audioCtx.createBufferSource();
+                    s.buffer = p.buffer;
+                    s.playbackRate.value = p.pitch;
+
+                    const g = STATE.audioCtx.createGain();
+                    const t = STATE.audioCtx.currentTime;
+
+                    // Simple Envelope: Attack -> Sustain/Decay
+                    // We treat 'decay' here as a volume scaler or short fadeout ?
+                    // User request: "attack and decay". Usually means simple A/D envelope (one shot) or A/R.
+                    // Let's implement A/D (Attack -> Decay to Silence) behavior if Decay is < 1.0, else Sustain.
+                    // Actually, simple standard implementation:
+                    // Attack: 0 -> 1
+                    // Decay: how long it rings out?
+
+                    // Implementation: 
+                    // Attack: Ramp 0 to 1 over p.attack
+                    // If p.decay < 1.0: Ramp 1 to 0 over p.decay * duration? No, let's treat decay as release time equivalent.
+
+                    g.gain.setValueAtTime(0, t);
+                    g.gain.linearRampToValueAtTime(1.0, t + p.attack);
+
+                    // Route
+                    g.connect(STATE.mainGain);
+                    s.connect(g);
+                    s.start(t);
+
+                    // Store for stop
+                    STATE.voices[i] = s;
+
+                    // Auto cleanup
+                    s.onended = () => { if (STATE.voices[i] === s) delete STATE.voices[i]; };
+                }
+            } else {
+                startSynthNote(i);
+            }
+        }
+
+        function releasePad(i) {
+            updatePadVisuals(i, false);
+            if (STATE.mode === 'synth') stopSynthNote(i);
+            // In Sampler mode, we usually let it play out (one shot), unless we want Gate mode. 
+            // For now, let's assume One Shot based on "Attack/Decay" request usually implying drum hits.
+            // If user wants gate, we can add that later.
+        }
+
+        function updatePadParam(k, v) {
+            const p = STATE.pads[STATE.selectedPad];
+            p[k] = parseFloat(v);
+            updateKnob('smp', k, p[k]);
+        }
+
+        function updateSamplerKnobs() {
+            const p = STATE.pads[STATE.selectedPad];
+            if (!p) return;
+            // Update visuals
+            const m = { 'pitch': ['smp-pitch', 0.1, 2.0, 'x'], 'attack': ['smp-att', 0, 0.5, 's'], 'decay': ['smp-dec', 0, 1.0, 's'] }; // Decay mapped 0-1 arbitrary
+            // Update the DOM elements
+            document.getElementById('smp-pitch').value = p.pitch;
+            document.getElementById('smp-att').value = p.attack;
+            document.getElementById('smp-dec').value = p.decay;
+
+            updateKnobVisualsGeneric();
+        }
+
+        // --- SYNTH LOGIC ---
+        function startSynthNote(padIndex) {
+            if (STATE.voices[padIndex]) stopSynthNote(padIndex);
+            const t = STATE.audioCtx.currentTime;
+            const pitchIndex = (STATE.synth.layout === 'mpc') ? MPC_MAP.indexOf(padIndex) : padIndex;
+
+            const osc = STATE.audioCtx.createOscillator();
+            const gain = STATE.audioCtx.createGain();
+            const filter = STATE.audioCtx.createBiquadFilter();
+            const lfo = STATE.audioCtx.createOscillator();
+            const lfoGain = STATE.audioCtx.createGain();
+
+            const freq = 130.81 * Math.pow(2, pitchIndex / 12);
+            osc.frequency.value = freq;
+            osc.type = STATE.synth.wave;
+
+            lfo.frequency.value = 5;
+            lfoGain.gain.value = (STATE.synth.vibrato / 100) * 10;
+            lfo.connect(lfoGain); lfoGain.connect(osc.frequency); lfo.start(t);
+
+            filter.type = 'lowpass';
+            filter.frequency.setValueAtTime(STATE.synth.cutoff, t);
+            filter.Q.value = STATE.synth.resonance;
+            filter.frequency.exponentialRampToValueAtTime(Math.max(20, STATE.synth.cutoff * 0.5), t + STATE.synth.release);
+
+            const vol = (STATE.synth.volume / 100);
+            gain.gain.setValueAtTime(0, t);
+            gain.gain.linearRampToValueAtTime(vol, t + STATE.synth.attack);
+            gain.gain.exponentialRampToValueAtTime(vol * 0.8, t + 0.2); // Sustain
+
+            osc.connect(filter); filter.connect(gain); gain.connect(STATE.mainGain);
+            osc.start(t);
+            STATE.voices[padIndex] = { osc, gain, lfo, filter };
+        }
+
+        function stopSynthNote(padIndex) {
+            const v = STATE.voices[padIndex];
+            if (!v || !v.osc) return;
+            const t = STATE.audioCtx.currentTime;
+            v.gain.gain.cancelScheduledValues(t);
+            v.gain.gain.setValueAtTime(v.gain.gain.value, t);
+            v.gain.gain.exponentialRampToValueAtTime(0.001, t + STATE.synth.release);
+            v.osc.stop(t + STATE.synth.release + 0.1);
+            v.lfo.stop(t + STATE.synth.release + 0.1);
+            delete STATE.voices[padIndex];
+        }
+
+        function updateSynthParam(k, v) {
+            if (k === 'wave' || k === 'layout') STATE.synth[k] = v;
+            else { STATE.synth[k] = parseFloat(v); updateKnobVisualsGeneric(); }
+        }
+
+        // --- VISUALS ---
+        function drawLoop() {
+            if (!STATE.analyser) { requestAnimationFrame(drawLoop); return; }
+
+            const cvs = document.getElementById('visualizer');
+            const ctx = cvs.getContext('2d');
+            const w = cvs.width = cvs.clientWidth;
+            const h = cvs.height = cvs.clientHeight;
+
+            const b = new Uint8Array(STATE.analyser.frequencyBinCount);
+            STATE.analyser.getByteTimeDomainData(b);
+
+            // Draw Osc
+            ctx.clearRect(0, 0, w, h); // transparent bg
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = getComputedStyle(document.body).getPropertyValue('--accent');
+            ctx.beginPath();
+            const slice = w * 1.0 / b.length;
+            let x = 0;
+            for (let i = 0; i < b.length; i++) {
+                const v = b[i] / 128.0;
+                const y = v * h / 2;
+                if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+                x += slice;
+            }
+            ctx.stroke();
+
+            // VU Meter
+            let sum = 0;
+            for (let i = 0; i < b.length; i++) { const amps = (b[i] - 128) / 128; sum += amps * amps; }
+            const rms = Math.sqrt(sum / b.length);
+            const vuHeight = Math.min(100, rms * 400); // Scale up
+            document.getElementById('vu-bar').style.height = vuHeight + '%';
+
+            requestAnimationFrame(drawLoop);
+        }
+
+        function updateKnobVisuals() { updateKnobVisualsGeneric(); }
+        function updateKnobVisualsGeneric() {
+            // Synth
+            const s = STATE.synth;
+            setKnob('syn-att', s.attack, 0.01, 2, 's');
+            setKnob('syn-rel', s.release, 0.1, 3, 's');
+            setKnob('syn-cut', s.cutoff, 100, 10000, '');
+            setKnob('syn-res', s.resonance, 0, 20, '');
+            setKnob('syn-vib', s.vibrato, 0, 100, '');
+            setKnob('syn-vol', s.volume, 0, 100, '');
+
+            // Sampler (curr pad)
+            const p = STATE.pads[STATE.selectedPad];
+            if (p) {
+                setKnob('smp-pitch', p.pitch, 0.1, 2, 'x');
+                setKnob('smp-att', p.attack, 0, 0.5, 's');
+                setKnob('smp-dec', p.decay, 0, 1.0, '');
+            }
+        }
+        function updateKnob(prefix, key, v) {
+            // Helper called by sliders to live update knobs
+            updateKnobVisualsGeneric();
+        }
+
+        function setKnob(id, v, min, max, u) {
+            const el = document.getElementById('ring-' + id);
+            if (!el) return;
+            const p = (v - min) / (max - min);
+            el.style.background = `conic-gradient(var(--accent) ${p * 270}deg, var(--bg-pad) 0)`;
+            el.style.transform = 'rotate(225deg)';
+
+            let t = v;
+            if (v % 1 !== 0 && v < 10 && v > -10) t = v.toFixed(2);
+            else if (v >= 1000) t = (v / 1000).toFixed(1) + 'k';
+            else t = Math.round(v);
+
+            document.getElementById('val-' + id).textContent = t + u;
+        }
+
+        // --- GRID & IO ---
+        function createGrid() {
+            DOM.grid.innerHTML = '';
+            for (let i = 0; i < 16; i++) {
+                const p = document.createElement('div');
+                p.className = 'pad';
+                p.id = `pad-${i}`;
+                p.innerHTML = `<div class="pad-label">${i + 1}</div><div class="sample-name" contenteditable="true" onblur="renamePad(${i}, this.textContent)" onkeydown="if(event.key==='Enter') this.blur()">Empty</div>`;
+                p.onmousedown = (e) => { if (e.target.classList.contains('sample-name')) return; triggerPad(i); };
+                p.onmouseup = () => releasePad(i);
+                p.onmouseleave = () => releasePad(i);
+                DOM.grid.appendChild(p);
+            }
+        }
+
+        function renamePad(i, val) {
+            STATE.pads[i].name = val;
+        }
+
+        function updatePadVisuals(i, active) {
+            const p = document.getElementById(`pad-${i}`);
+            if (active) p.classList.add('active'); else p.classList.remove('active');
+        }
+
+        function updateLabels() {
+            for (let i = 0; i < 16; i++) {
+                const el = document.getElementById(`pad-${i}`).querySelector('.sample-name');
+                if (STATE.mode === 'synth') {
+                    // Synth mode: not editable labels ideally
+                    const n = ['C', 'C#', 'D', 'D#', 'E', 'F', 'F#', 'G', 'G#', 'A', 'A#', 'B'];
+                    const p = (STATE.synth.layout === 'mpc') ? MPC_MAP.indexOf(i) : i;
+                    el.textContent = n[p % 12] + (Math.floor(p / 12) + 3);
+                    el.contentEditable = false;
+                } else {
+                    el.textContent = STATE.pads[i].name;
+                    el.contentEditable = true;
+                }
+            }
+        }
+
+        // --- FILE & MIDI HELPER (Shortened for brevity but logic same) ---
+        async function loadPackFromFile(f) {
+            if (!f) return;
+            try {
+                const z = await JSZip.loadAsync(f), l = [];
+                z.forEach((p, e) => { if (!e.dir && /\.(wav|mp3|ogg)$/i.test(e.name)) l.push(e) });
+                l.sort((a, b) => a.name.localeCompare(b.name, undefined, { numeric: true }));
+                for (let i = 0; i < Math.min(16, l.length); i++) {
+                    const b = await l[i].async('blob');
+                    await loadSampleFile(new File([b], l[i].name.split('/').pop()), i);
+                }
+                setMode('sampler');
+            } catch (e) { console.error(e); }
+        }
+        async function loadSampleFile(f, i) {
+            const b = await f.arrayBuffer(), a = await STATE.audioCtx.decodeAudioData(b);
+            STATE.pads[i].buffer = a;
+            STATE.pads[i].name = f.name;
+            STATE.pads[i].blob = f;
+            updateLabels();
+        }
+        async function exportPack() {
+            const z = new JSZip(); let c = 0;
+            STATE.pads.forEach((p) => { if (p.blob) { z.file(p.name, p.blob); c++ } });
+            if (c > 0) {
+                const b = await z.generateAsync({ type: "blob" }), a = document.createElement('a');
+                a.href = URL.createObjectURL(b); a.download = "MyDilla.dilla"; a.click();
+            }
+        }
+
+        // Helper Dragger
+        let dragK = null, dragY = 0, dragS = 0;
+        function startDrag(e, id) { e.preventDefault(); dragK = id; dragY = e.clientY; dragS = parseFloat(document.getElementById(id).value); document.addEventListener('mousemove', onDrag); document.addEventListener('mouseup', endDrag); }
+        function onDrag(e) { if (!dragK) return; const rg = document.getElementById(dragK), dy = dragY - e.clientY, f = (rg.max - rg.min) / 200; let v = dragS + dy * f; v = Math.min(rg.max, Math.max(rg.min, v)); rg.value = v; rg.dispatchEvent(new Event('input')); } // dispatch input to trigger update
+        function endDrag() { dragK = null; document.removeEventListener('mousemove', onDrag); document.removeEventListener('mouseup', endDrag); }
+
+        function setupMIDI() { if (navigator.requestMIDIAccess) navigator.requestMIDIAccess().then(m => { STATE.midiAccess = m; DOM.status.textContent = "MIDI Ready"; DOM.status.classList.add('ok'); detectAndSetMapping(m); m.inputs.forEach(i => i.onmidimessage = onMIDIMsg); m.onstatechange = e => { if (e.port.type === 'input') { e.port.onmidimessage = onMIDIMsg; detectAndSetMapping(STATE.midiAccess); } } }); }
+        function detectAndSetMapping(m) { const arr = Array.from(m.inputs.values()); for (const i of arr) { const n = (i.name || "").toLowerCase(); if (n.includes('qmk')) { setFw('qmk'); return; } if (n.includes('dilla') || n.includes('arduino')) { setFw('dilla'); return; } } }
+        function setFw(v) { STATE.mapping = v; document.getElementById('fw-select').value = v; }
+        function onMIDIMsg(msg) { const [c, n, v] = msg.data, on = (c & 0xF0) === 0x90 && v > 0, off = (c & 0xF0) === 0x80 || ((c & 0xF0) === 0x90 && v === 0); if (!on && !off) return; let idx = -1; if (STATE.mapping === 'qmk') { if (n >= 36) idx = (n - 48 + 1600) % 16; } else if (STATE.mapping === 'dilla') { let x = (n + 1600) % 16, r = Math.floor(x / 4); if (r === 1) r = 3; else if (r === 3) r = 1; idx = r * 4 + (x % 4); } if (idx !== -1) on ? triggerPad(idx) : releasePad(idx); }
+
+        function setupKeyboard() { const k = "1234qwerasdfzxcv"; window.onkeydown = e => { if (e.target.tagName === 'DIV' && e.target.isContentEditable) return; if (!e.repeat) { const i = k.indexOf(e.key.toLowerCase()); if (i > -1) triggerPad(i) } }; window.onkeyup = e => { if (e.target.tagName === 'DIV' && e.target.isContentEditable) return; const i = k.indexOf(e.key.toLowerCase()); if (i > -1) releasePad(i) }; }
+        function setupGlobalDrag() { document.body.ondragover = e => e.preventDefault(); document.body.ondrop = e => { e.preventDefault(); const f = e.dataTransfer.files[0]; if (f) { if (f.name.endsWith('.dilla') || f.name.endsWith('.zip')) { loadPackFromFile(f); return; } const t = e.target.closest('.pad'); if (t) { const id = parseInt(t.id.split('-')[1]); loadSampleFile(f, id); } } } }
+
+        function toggleTheme() { STATE.theme = STATE.theme === 'dark' ? 'light' : 'dark'; applyTheme(); saveSettings(); }
+        function setAccent(h) { STATE.accent = h; document.documentElement.style.setProperty('--accent', h); const r = parseInt(h.substr(1, 2), 16), g = parseInt(h.substr(3, 2), 16), b = parseInt(h.substr(5, 2), 16); document.documentElement.style.setProperty('--accent-rgb', `${r},${g},${b}`); saveSettings(); updateKnobVisuals(); }
+        function applyTheme() { document.documentElement.setAttribute('data-theme', STATE.theme); DOM.themeIcon.textContent = STATE.theme === 'dark' ? '☀' : '☾'; }
+        function saveSettings() { localStorage.setItem('dilla_set', JSON.stringify({ t: STATE.theme, a: STATE.accent, u: STATE.uiMode })); }
+        function loadSettings() { const s = JSON.parse(localStorage.getItem('dilla_set')); if (s) { if (s.t) { STATE.theme = s.t; applyTheme(); } if (s.a) { document.getElementById('accent-picker').value = s.a; setAccent(s.a); } if (s.u) { STATE.uiMode = s.u; if (s.u === 'sliders') toggleKnobs(); } } }
+
+        init();
+    </script>
+</body>
+
+</html>

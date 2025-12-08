@@ -6,7 +6,8 @@ Technical reference for the **Dilla4x Standard MIDI Firmware**.
 > **Scope**: This document covers the standalone MIDI firmware (`firmware/Dilla4x-MIDI`).
 > Future firmwares (e.g., QMK) will be documented separately.
 >
-> **For user-facing instructions**, see [How to Use Your Dilla4x](../sound/How-to-Use-Dilla4x-MIDI.md).  
+> **For user-facing instructions**, see [How to Use Your Dilla4x](../software/How-to-Use-Dilla4x-MIDI.md).  
+
 > This document is for developers and technical users.
 
 ---
@@ -332,7 +333,8 @@ All in `Config.h`:
 ## References
 
 - **Full Spec**: [`FIRMWARE_SPEC.md`](../../firmware/Dilla4x-MIDI/FIRMWARE_SPEC.md)
-- **User Guide**: [How to Use Your Dilla4x](../sound/How-to-Use-Dilla4x.md)
+- **User Guide**: [How to Use Your Dilla4x](../software/How-to-Use-Dilla4x-MIDI.md)
+
 - **Hardware Assembly**: [Assembly Guide](../hardware/Assembly-Guide.md)
 - **Source Code**: `firmware/Dilla4x-MIDI/`
 
