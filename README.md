@@ -31,13 +31,13 @@ Everything you need to get started is in our comprehensive **[Wiki](wiki/Home.md
 1.  **🛠️ Build It**
     *   Follow the **[Step-by-Step Assembly Guide](wiki/hardware/Assembly-Guide.md)** to put your hardware together.
 2.  **⚡ Flash Firmware**
-    *   **Choose your firmware:**
-        *   **[Dilla4x-MIDI](firmware/Dilla4x-MIDI/)** - Dedicated MIDI controller with chord-based octave shifting (v0.3.0)
-        *   **[Dilla4x-QMK](firmware/qmk/dilla4x/)** - Programmable macro pad with VIA support (v0.1.0)
+    *   **Download from [GitHub Releases](https://github.com/Cypaloma/Dilla4x/releases/tag/v0.3.1)**:
+        *   **MIDI Firmware** (v0.3.0): `dilla4x-midi-v0.3.0.hex`
+        *   **QMK Firmware** (v0.1.0): `dilla4x-qmk-v0.1.0.hex` (Unified)
 3.  **🎧 Use It**
     *   **MIDI Mode**: Learn the layout in **[How to Use Dilla4x-MIDI](wiki/software/How-to-Use-Dilla4x-MIDI.md)**
     *   **QMK Mode**: Remap keys with VIA - see **[QMK README](firmware/qmk/dilla4x/readme.md)**
-    *   **Web App**: Try the **[Web Dilla4x Manual](wiki/software/Web-Dilla4x-Manual.md)** for browser-based synthesis
+    *   **Web App**: Download `dilla4x-web-v0.1.0.zip` or use the **[Web Manual](wiki/software/Web-Dilla4x-Manual.md)**
 
 ---
 

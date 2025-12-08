@@ -8,6 +8,7 @@ RELEASE_DIR="release_builds"
 PLATFORM_VERSION="v0.3.1"
 MIDI_VERSION="v0.3.0"
 QMK_VERSION="v0.1.0"
+WEB_VERSION="v0.1.0"
 
 echo "🛠️  Building Dilla4x Platform Release ${PLATFORM_VERSION}"
 echo "=============================================="
@@ -56,12 +57,22 @@ fi
 
 # Build Web App
 echo ""
-echo "📦 Packaging Web-Dilla4x..."
+echo "📦 Packaging Web-Dilla4x ${WEB_VERSION}..."
 if command -v zip &> /dev/null; then
     cd tools/web-dilla4x
-    zip -r ../../$RELEASE_DIR/dilla4x-web-${PLATFORM_VERSION}.zip . -x "*.DS_Store"
+    
+    # Add a helpful README for the zip user
+    echo "Dilla4x Web Companion (v${WEB_VERSION})" > README.txt
+    echo "-----------------------------------" >> README.txt
+    echo "1. Extract this zip file." >> README.txt
+    echo "2. Double-click 'index.html' to launch the app." >> README.txt
+    echo "3. Connect your Dilla4x via USB." >> README.txt
+    
+    zip -r ../../$RELEASE_DIR/dilla4x-web-${WEB_VERSION}.zip . -x "*.DS_Store"
+    
+    rm README.txt # Cleanup
     cd ../..
-    echo "✅ Web app packaged: dilla4x-web-${PLATFORM_VERSION}.zip"
+    echo "✅ Web app packaged: dilla4x-web-${WEB_VERSION}.zip"
 else
     echo "⚠️  zip not found. Skipping web app packaging."
 fi
