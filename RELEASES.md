@@ -1,29 +1,44 @@
-# Dilla4x Firmware Releases
+# Dilla4x Platform Release v0.3.1
 
-This directory contains pre-compiled firmware files for easy installation.
+This release includes the latest firmware and tools for the Dilla4x platform.
 
-## 📥 Download Latest Release
+## 📥 Download Release v0.3.1
+Visit the [Releases Page](https://github.com/Cypaloma/Dilla4x/releases/tag/v0.3.1) to download.
 
-Visit the [Releases Page](https://github.com/Cypaloma/Dilla4x/releases) to download the latest firmware.
+## 📦 Included Components
 
-## 🎵 Available Firmwares
+| Component | Version | Description |
+| :--- | :--- | :--- |
+| **Dilla4x-MIDI** | `v0.3.0` | Dedicated performance firmware |
+| **Dilla4x-QMK** | `v0.1.0` | Programmable keyboard firmware |
+| **Web-Dilla4x** | `v0.3.1` | Offline sampler/synth app |
 
-### Dilla4x-MIDI (v0.3.0)
+---
+
+## 🎵 Dilla4x-MIDI (v0.3.0)
 **File**: `dilla4x-midi-v0.3.0.hex`
 
 - Dedicated MIDI controller with chord-based octave shifting
 - Class-compliant USB MIDI
-- Chromatic notes C2-D#3
-- Accessibility-focused design
 - [Usage Guide](../wiki/software/How-to-Use-Dilla4x-MIDI.md)
 
 **Best for**: Music production, DAWs, live performance
 
-### QMK Firmware
+## ⌨️ Dilla4x-QMK (v0.1.0)
+**File**: `dilla4x-qmk-v0.1.0.hex`
 
-| Variant | Filename | Description |
-|---------|----------|-------------|
-| **Unified** | `dilla4x-qmk-v0.1.0.hex` | **VIA Enabled**. Standard QMK firmware with VIA support. |
+- Standard QMK firmware with VIA support enabled by default
+- Fully programmable keys and layers
+- [Usage Guide](../wiki/software/How-to-Use-Dilla4x-QMK.md)
+
+**Best for**: Gaming, productivity, macros
+
+## 🎹 Web-Dilla4x (v0.3.1)
+**File**: `dilla4x-web-v0.3.1.zip`
+
+- Offline version of the web sampler/synth
+- Extract and open `index.html` in any browser
+- No internet connection required
 
 **Flashing QMK Firmware:**
 1. Put device in bootloader mode (reset button twice).

@@ -5,11 +5,12 @@
 set -e
 
 RELEASE_DIR="release_builds"
+PLATFORM_VERSION="v0.3.1"
 MIDI_VERSION="v0.3.0"
 QMK_VERSION="v0.1.0"
 
-echo "🛠️  Building Dilla4x Firmware Releases"
-echo "======================================"
+echo "🛠️  Building Dilla4x Platform Release ${PLATFORM_VERSION}"
+echo "=============================================="
 echo ""
 
 # Create release directory
@@ -42,23 +43,27 @@ if command -v qmk &> /dev/null; then
         ln -s "$(pwd)/firmware/qmk/dilla4x" "$HOME/qmk_firmware/keyboards/dilla4x"
     fi
     
-    # Compile default keymap
-    echo "   Building default keymap..."
+    # Compile unified firmware
+    echo "   Building Unified QMK Firmware..."
     qmk compile -kb dilla4x -km default
-    cp "$HOME/qmk_firmware/.build/dilla4x_default.hex" "$RELEASE_DIR/dilla4x-qmk-default-${QMK_VERSION}.hex"
+    cp "$HOME/qmk_firmware/.build/dilla4x_default.hex" "$RELEASE_DIR/dilla4x-qmk-${QMK_VERSION}.hex"
     
-    # Compile VIA keymap
-    echo "   Building VIA keymap..."
-    qmk compile -kb dilla4x -km via
-    cp "$HOME/qmk_firmware/.build/dilla4x_via.hex" "$RELEASE_DIR/dilla4x-qmk-via-${QMK_VERSION}.hex"
-    
-    echo "✅ QMK firmware built:"
-    echo "   - dilla4x-qmk-default-${QMK_VERSION}.hex"
-    echo "   - dilla4x-qmk-via-${QMK_VERSION}.hex"
+    echo "✅ QMK firmware built: dilla4x-qmk-${QMK_VERSION}.hex"
 else
     echo "⚠️  qmk not found. Please build manually:"
     echo "   qmk compile -kb dilla4x -km default"
-    echo "   qmk compile -kb dilla4x -km via"
+fi
+
+# Build Web App
+echo ""
+echo "📦 Packaging Web-Dilla4x..."
+if command -v zip &> /dev/null; then
+    cd tools/web-dilla4x
+    zip -r ../../$RELEASE_DIR/dilla4x-web-${PLATFORM_VERSION}.zip . -x "*.DS_Store"
+    cd ../..
+    echo "✅ Web app packaged: dilla4x-web-${PLATFORM_VERSION}.zip"
+else
+    echo "⚠️  zip not found. Skipping web app packaging."
 fi
 
 # Clean up temporary build directories

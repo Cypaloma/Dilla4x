@@ -4,7 +4,7 @@
 
 > *"Get ready for the up-and-coming, whatever it is." - J Dilla*
 
-![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg) ![Hardware](https://img.shields.io/badge/hardware-Open%20Source-green.svg) ![Firmware](https://img.shields.io/badge/firmware-Dual%20Mode-orange.svg)
+![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg) ![Release](https://img.shields.io/badge/release-v0.3.1-blue.svg) ![Hardware](https://img.shields.io/badge/hardware-Open%20Source-green.svg) ![Firmware](https://img.shields.io/badge/firmware-Dual%20Mode-orange.svg)
 
 ---
 
