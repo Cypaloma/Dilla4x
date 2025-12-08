@@ -1,6 +1,11 @@
-# Default Keymap
+# Default Keymap (VIA Enabled)
 
-Basic MIDI note layout matching the Dilla4x-MIDI firmware.
+Standard MIDI note layout for Dilla4x with VIA support enabled by default.
+
+## Features
+- **MIDI Notes**: Matches Dilla4x-MIDI firmware layout (C2-D#3)
+- **VIA Support**: Remap keys instantly using [VIA](https://usevia.app)
+- **Layer Support**: Dynamic layers available via VIA
 
 ## Layout
 

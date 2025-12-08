@@ -23,14 +23,13 @@ Visit the [Releases Page](https://github.com/Cypaloma/Dilla4x/releases) to downl
 
 | Variant | Filename | Description |
 |---------|----------|-------------|
-| **Default** | `dilla4x-qmk-default-v0.1.0.hex` | Standard QMK features. No VIA. |
-| **VIA** | `dilla4x-qmk-via-v0.1.0.hex` | **RECOMMENDED**. Enables VIA configuration. |
+| **Unified** | `dilla4x-qmk-v0.1.0.hex` | **VIA Enabled**. Standard QMK firmware with VIA support. |
 
 **Flashing QMK Firmware:**
 1. Put device in bootloader mode (reset button twice).
 2. Flash using QMK Toolbox or CLI:
    ```bash
-   qmk flash -kb dilla4x -km via
+   qmk flash dilla4x-qmk-v0.1.0.hex
    # OR with avrdude manually if needed (see above)
    ```
 
