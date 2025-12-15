@@ -5,4 +5,9 @@
 VIA_ENABLE = yes
 
 # Link Time Optimization (reduce firmware size)
+# Link Time Optimization (reduce firmware size)
 LTO_ENABLE = yes
+
+# MIDI Support (Basic Note On/Off) - Disabled for debugging
+# MIDI_ENABLE = yes
+

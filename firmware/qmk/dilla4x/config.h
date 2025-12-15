@@ -20,6 +20,7 @@
  * This file only contains settings that CANNOT be defined in info.json.
  */
 
+
 /*
  * MIDI Options
  * Using BASIC mode for simple Note On/Off (no velocity sensitivity needed)

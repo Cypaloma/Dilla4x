@@ -1,8 +1,32 @@
 {
     "name": "Dilla4x",
-    "vendorId": "FEED",
-    "productId": "4444",
-    "firmwareVersion": 0,
+    "vendorId": "0xfeed",
+    "productId": "0x4444",
+    "menus": [
+        {
+            "label": "Lighting",
+            "content": [
+                {
+                    "label": "Backlight",
+                    "content": [
+                        {
+                            "label": "Brightness",
+                            "type": "range",
+                            "options": [
+                                0,
+                                255
+                            ],
+                            "content": [
+                                "id_qmk_rgb_matrix_brightness",
+                                3,
+                                1
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ],
     "matrix": {
         "rows": 4,
         "cols": 4

@@ -1,2 +1,0 @@
-# This keyboard is not suitable for automated CI testing
-# It requires specific hardware (ATmega32U4) and cannot be tested on other platforms

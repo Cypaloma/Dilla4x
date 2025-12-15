@@ -32,13 +32,15 @@ The Dilla4x is a minimalist 4x4 ortholinear MIDI controller inspired by classic 
 
 ### 🧠 Software & Manuals
 - **[How to Use Dilla4x-MIDI](software/How-to-Use-Dilla4x-MIDI.md)** - Complete usage guide for the MIDI firmware (v0.3.0)
-- **[How to Use Dilla4x-QMK](software/How-to-Use-Dilla4x-QMK.md)** - Complete usage guide for the QMK firmware (v0.1.0)
+- **[How to Use Dilla4x-QMK](software/How-to-Use-Dilla4x-QMK.md)** - Complete usage guide for the QMK firmware (v0.1.1-alpha - UNTESTED)
 - **[Web Dilla4x Manual](software/Web-Dilla4x-Manual.md)** - Browser-based sampler/synth companion app
 
 ### Sound & Music
 - [Music Making Overview](sound/Music-Making-Overview.md)
-
 - [Beginner's Guide](sound/Beginner-Guide.md)
+
+### Mental Health & Accessibility
+- **[Bio-Debugger](Bio-Debugger-Page-1.md)** - Access-first protocol for technical overwhelm (3-page guide)
 
 ## 🛠️ Technical Specifications
 - **Microcontroller**: Arduino Pro Micro (ATmega32U4)

@@ -1,5 +1,8 @@
 # How to Use Dilla4x-QMK Firmware
 
+> [!CAUTION]
+> **QMK v0.1.1-alpha - NOT TESTED ON HARDWARE**: This firmware includes significant matrix configuration changes that have not been validated on physical hardware. All devices were sent to participants before testing could be completed. Use with caution and please report any issues.
+
 The **Dilla4x-QMK** firmware transforms your Dilla4x into a fully programmable input device with real-time customization via VIA. This guide covers everything from flashing to advanced usage.
 
 ---
@@ -19,11 +22,11 @@ The **Dilla4x-QMK** firmware transforms your Dilla4x into a fully programmable i
 
 ## What is the QMK Firmware?
 
-**QMK (Quantum Mechanical Keyboard)** is an open-source keyboard firmware used by thousands of custom keyboards worldwide. The Dilla4x-QMK firmware (v0.1.0) brings this powerful ecosystem to your device.
+**QMK (Quantum Mechanical Keyboard)** is an open-source keyboard firmware used by thousands of custom keyboards worldwide. The Dilla4x-QMK firmware (v0.1.1-alpha) brings this powerful ecosystem to your device.
 
 ### Key Differences from MIDI Firmware
 
-| Feature | Dilla4x-MIDI (v0.3.0) | Dilla4x-QMK (v0.1.0) |
+| Feature | Dilla4x-MIDI (v0.3.0) | Dilla4x-QMK (v0.1.1-alpha) |
 |---------|----------------------|---------------------|
 | **Primary Use** | MIDI controller for music | Programmable macro pad / gaming |
 | **Customization** | Fixed layout, octave shifting via chords | Fully reprogrammable via VIA |
@@ -406,13 +409,13 @@ Full reference: [QMK MIDI Keycodes](https://docs.qmk.fm/#/feature_midi)
 3. **Edit `keymap.c`**:
    ```c
    const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
-       [0] = LAYOUT_ortho_4x4(
+       [0] = LAYOUT(
            KC_Q, KC_W, KC_E, KC_R,
            KC_A, KC_S, KC_D, KC_F,
            KC_Z, KC_X, KC_C, KC_V,
            KC_1, KC_2, KC_3, MO(1)
        ),
-       [1] = LAYOUT_ortho_4x4(
+       [1] = LAYOUT(
            KC_ESC, KC_UP, KC_HOME, KC_END,
            KC_LEFT, KC_DOWN, KC_RGHT, KC_PGDN,
            KC_MUTE, KC_VOLD, KC_VOLU, KC_MPLY,

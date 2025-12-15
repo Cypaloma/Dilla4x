@@ -6,6 +6,8 @@
 
 ![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg) ![Release](https://img.shields.io/badge/release-v0.3.1-blue.svg) ![Hardware](https://img.shields.io/badge/hardware-Open%20Source-green.svg) ![Firmware](https://img.shields.io/badge/firmware-Dual%20Mode-orange.svg)
 
+> 💭 **Stressed out? Overwhelmed?** Try the [Bio-Debugger](tools/bio-debugger/README.md) - a mental health resource for de-escalation during technical challenges.
+
 ---
 
 ## 🎵 What is Dilla4x?
@@ -32,12 +34,15 @@ Everything you need to get started is in our comprehensive **[Wiki](wiki/Home.md
     *   Follow the **[Step-by-Step Assembly Guide](wiki/hardware/Assembly-Guide.md)** to put your hardware together.
 2.  **⚡ Flash Firmware**
     *   **Download from [GitHub Releases](https://github.com/Cypaloma/Dilla4x/releases/tag/v0.3.1)**:
-        *   **MIDI Firmware** (v0.3.0): `dilla4x-midi-v0.3.0.hex`
-        *   **Flashing QMK Firmware:**
-            1.  **Manual Reset Required**: You must double-tap the physical reset button to enter bootloader mode. The auto-flash recovery script will **NOT** work for QMK.
+        *   **MIDI Firmware** (v0.3.0): `dilla4x-midi-v0.3.0.hex` ✅ Stable
+        *   **QMK Firmware** (v0.1.1-alpha): ⚠️ **ALPHA - UNTESTED ON HARDWARE**
+            
+            > **CAUTION**: This firmware has NOT been tested on physical hardware. All devices were sent to participants before testing. Use at your own risk and please report issues.
+            
+            1.  **Manual Reset Required**: Double-tap the physical reset button to enter bootloader mode. The auto-flash recovery script will **NOT** work for QMK.
             2.  Flash using QMK Toolbox or CLI:
                 ```bash
-                qmk flash dilla4x-qmk-v0.1.0.hex
+                qmk flash dilla4x-qmk-v0.1.1-alpha.hex
                 ```
 3.  **🎧 Use It**
     *   **MIDI Mode**: Learn the layout in **[How to Use Dilla4x-MIDI](wiki/software/How-to-Use-Dilla4x-MIDI.md)**
